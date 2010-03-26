@@ -5,13 +5,13 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<script type="text/javascript" src="swfobject/swfobject.js"></script>
 		<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
-		<script type="text/javascript" src="video.js"></script>
+		<script type="text/javascript" src="super_dumb_player.js"></script>
 		<script type="text/javascript" src="jquery-ui-1.8.custom.min.js"></script>
 		<script type="text/javascript" src="raphael-min.js"></script>
 
 		<script type="text/javascript">
-		var flashvars = {};
-		var params = {allowScriptAccess: "always", allowFullScreen:"true"};
+		var flashvars  = {};
+		var params     = {allowScriptAccess: "always", allowFullScreen:"true"};
 		var attributes = {};
 
 		// swfobject.embedSWF("fdvideo.swf", "flash_movie", 426, 320, "9.0.0", null, flashvars, params, attributes)
@@ -92,7 +92,8 @@
     
     <h2>UnFeatures</h2>
     <p>
-      Does supports more than one video/player at a time. Probably only works with progressive video. "Tested" in IE 7, Safari, Chrome and Firefox 3.5, but not heavily yet.      
+      Does supports more than one video/player at a time. Probably only works with progressive video. "Tested" in IE 7, Safari, Chrome and Firefox 3.5, but not heavily yet.
+      Doesn't show a buffering state.
     </p>
     
     <h2>Basic Usage</h2>
@@ -149,6 +150,9 @@
     
     <h2>API</h2>
     <ul class="api">
+      <li><h3>dumb_player.player_source</h3>
+        Set this property to point to the URL for the super_dumb_player.swf
+      </li>
       <li><h3>
         dumb_player.create(<span class='args'>target_element, video_src</span>) 
         <span class="returns">&rArr; dumb_player instance</span></h3>
@@ -219,7 +223,7 @@
 		  var vp;
 		  $(document).ready(function(){
 		    $("#flash_movie").click(function(){
-          vp = dumb_player.create("flash_movie", "videos/dumb_example.m4v");
+          vp = dumb_player.create("flash_movie", "assets/dumb_example.m4v");
           return false;
         });
 		  });

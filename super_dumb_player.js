@@ -5,13 +5,13 @@
 (function(){
 
   window.dumb_player = {
+    player_url  : "super_dumb_player.swf",
     create      : create,
     event       : function(id,event_name, data) {
                     $("#"+id).trigger(event_name+"."+id, data)
                   }
   };
 
-  var player_source = "fdvideo.swf";
 
   function create(id, video_src){
     var flashvars   = {target_id:id},
@@ -25,7 +25,7 @@
     dumb_player.ui.create(obj);
 
 		swfobject.embedSWF(
-		    player_source,
+		    dumb_player.player_url,
 		    id,
 		    obj.width(),
 		    obj.height(),

@@ -1,4 +1,7 @@
-//  F4V, MP4, M4A, MOV, MP4V, 3GP, and 3G2
+// Hi!
+// Copyright 2010 by John Weir, john@famedriver.com
+// Licensed under the MIT license. (feel free to use this)
+// Should support F4V, MP4, M4A, MOV, MP4V, 3GP, and 3G2
 // TODO fix buffering update so it shows up even when the player is paused
 package {
   import flash.display.LoaderInfo;
@@ -16,7 +19,7 @@ package {
   import flash.utils.Timer;
   import flash.events.TimerEvent;
   
-  public class FameDriverVideo extends Sprite {
+  public class SuperDumbPlayer extends Sprite {
 
     var video, 
         stream, 
@@ -25,7 +28,7 @@ package {
         player_id,
         timer:Timer;
     
-    function FameDriverVideo(){
+    function SuperDumbPlayer(){
       ExternalInterface.marshallExceptions = true;
       
       stage.scaleMode = StageScaleMode.NO_SCALE;
