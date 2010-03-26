@@ -40,6 +40,7 @@
         load   : function(src){ player().dumb_play(src); return self},
         remove : function(){ $(player()).replaceWith(original_state);},
         toggle : function(){ player().dumb_togglePlayPause(); return self;},
+        resize : function(h,w){ $(player()).css({width:w, height:h}); return self;},
         toggle_volume : function() {
           (player().dumb_volume() > 0) ? player().dumb_volume(0) : player().dumb_volume(0.8);
         }
@@ -66,8 +67,6 @@
 
   var ui_template = $("\
     <div class='dump_player_ui'>\
-      <div class='duration'/>\
-      <div class='time'/>\
       <div class='scrubber'>\
         <div class='track'>\
           <div class='buffer'>\
@@ -75,14 +74,16 @@
           </div>\
         </div>\
       </div>\
-      <div class='state'>\
+      <button class='state'>\
         <span class='play'>Pause</span>\
         <span class='pause'>Play</span>\
-      </div>\
-      <div class='volume'>\
+      </button>\
+      <button class='volume'>\
         <span class='on'>Mute</span>\
         <span class='off'>Unmute</span>\
-      </div>\
+      </button>\
+      <span class='duration'/>\
+      <span class='time'/>\
     </div>");
 
   function template(obj_or_html){
