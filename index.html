@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title>SWFObject 2 static publishing example page</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<script type="text/javascript" src="swfobject/swfobject.js"></script>
+		<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="video.js"></script>
+		<script type="text/javascript" src="jquery-ui-1.8.custom.min.js"></script>
+		<script type="text/javascript" src="raphael-min.js"></script>
+
+		<script type="text/javascript">
+		var flashvars = {};
+		var params = {allowScriptAccess: "always", allowFullScreen:"true"};
+		var attributes = {};
+
+		// swfobject.embedSWF("fdvideo.swf", "flash_movie", 426, 320, "9.0.0", null, flashvars, params, attributes)
+		</script>
+		<style type="text/css" media="screen">
+		  object {
+		    border:1px #F00 solid;
+		  }
+
+		  .scrubber {
+		    position:relative;
+		  }
+		  .scrubber .indicator {
+		    display:block;
+		  }
+		  .scrubber .thumb {position:absolute; left:0px; top:0px; height:10px; width:10px; background:#000; z-Index:99;}
+		  .scrubber .track {position:relative; height:10px; width:200px; background:#999; z-Index:1}
+		  .scrubber .buffer {position:absolute; left:0px; top:0px; height:10px; width:100px; background:#CCC; z-Index:50}
+
+		</style>
+	</head>
+	<body>
+    <h1>Super Dumb Player</h1>
+    <p><em>A Flash video player with has no built in user interface.</em></p>
+    <h2>Requirements</h2>
+    <ol>
+      <li>jQuery</li>
+      <li>jQuery UI with Draggable</li>
+      <li>swfobject</li>
+    </ol>
+    <h2>Basic Usage</h2>
+    <ol>
+      <li>Create an element to contain your video.  It must have a unique <b>id</b> and should include <b>height</b> and <b>width</b> styles. This element and its contents will be replaced by the flash movie.  If Flash it not available this element will be left alone.
+      </li>
+      <li>Create the player.
+        <code>
+          vp = dumb_player.create("my_unique_id", "vide_file_path.m4v");
+        </code>
+    </ol>
+    
+    <h2>Advanced Usage</h2>
+    
+    <h2>Custom Templates &amp; Using Canvas</h2>
+    
+    <h2>API</h2>
+    <ul class="api">
+      <li><h3>video.create</h3></li>
+      <li><h3></h3></li>
+    </ul>
+    
+    
+		<div id="flash_movie" style="width:426px; height:320px">
+		</div>
+
+	  <div id="flash_movie_2" style="width:426px; height:320px">
+		</div>
+
+
+		<ul id="movie1">
+		  <li src="flash.flv">flash.flv</li>
+	    <li src="videos/sample_iPod.m4v">sample_iPod.m4v</li>
+	    <li src="http://mw.smokinggun.com/full.flv">http://mw.smokinggun.com/full.flv</li>
+      <li src="videos/VideoName.flv">VideoName</li>
+	  </ul>
+
+
+    <ul id="movie2">
+		  <li src="test_Computer.m4v">test - Computer.m4v</li>
+		  <li src="test_iPhone_Cellular.3gp">test - iPhone (Cellular).3gp</li>
+		  <li src="test_iPhone.m4v">test - iPhone.m4v</li>
+	  </ul>
+
+
+		<script type="text/javascript" charset="utf-8">
+		  //video.ui.template($(".video_template"))
+
+		  var vp, vp_2;
+		  $(document).ready(function(){
+        vp = dumb_player.create("flash_movie", "videos/sample_iPod.m4v");
+        vp_2 = dumb_player.create("flash_movie_2", "videos/sample.m4v");
+
+        var thumb = $("#dumb_player_flash_movie_2 .thumb");
+        thumb.css({background:"none", width:"11px", height:"11px", top:0, left:0, lineHeight:"11px"});
+        var thumb = Raphael($("#dumb_player_flash_movie_2 .thumb")[0],11, 11);
+        thumb.circle(5,5,3).attr({fill:"#000"});
+		  });
+
+		  $("ul#movie1 li").click(function(){
+		    vp.load(""+$(this).attr("src"));
+		  })
+
+      $("ul#movie2 li").click(function(){
+        vp_2 = vp_2 || dumb_player.create("flash_movie_2", $(this).attr("src"));
+		    vp_2.load("videos/"+$(this).attr("src"));
+		  })
+
+
+		</script>
+	</body>
+</html>
