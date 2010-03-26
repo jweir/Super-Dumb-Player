@@ -3,11 +3,10 @@
 	<head>
 		<title>SWFObject 2 static publishing example page</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<script type="text/javascript" src="swfobject/swfobject.js"></script>
-		<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="vendor/swfobject.js"></script>
+		<script type="text/javascript" src="vendor/jquery-1.4.2.min.js"></script>
 		<script type="text/javascript" src="super_dumb_player.js"></script>
-		<script type="text/javascript" src="jquery-ui-1.8.custom.min.js"></script>
-		<script type="text/javascript" src="raphael-min.js"></script>
+		<script type="text/javascript" src="vendor/jquery-ui-1.8.custom.min.js"></script>
 
 		<script type="text/javascript">
 		var flashvars  = {};
@@ -25,6 +24,11 @@
         color:#000;
         width:800px;
       }
+      
+      h1 {
+        font-family:'Comic Sans', 'Comic Sans MS',cursive;
+      }
+      
       ol li {
         margin:0.5em 0;
       }
@@ -60,13 +64,31 @@
       a {
         color:#F60;
       }
+      
+      .dumb_example {
+        float:right;
+        width:270px;
+        padding: 10px;
+        margin: 10px;
+        background:#EEE;
+      }
 		
 		  object {
-		    -moz-box-shadow: #666 0px 0px 3px;
-        -webkit-box-shadow: #666 0px 0px 3px;
-         box-shadow: #666 0px 0px 3px;
+		    border:1px #FFF solid;
 		  }
-
+      
+      .duration, .time, .state, .volume {
+        margin: 2px;
+        font-size:10px; 
+        padding:2px;
+        background: #666;
+        color:#FFF;
+        position:relative;
+        float:left;
+        width:40px;
+        text-align:center;
+      }
+      
 		  .scrubber {
 		    position:relative;
 		  }
@@ -80,6 +102,8 @@
 		</style>
 	</head>
 	<body>
+	  
+	  
 	  <img src="assets/icon.jpg">
     <h1>Super Dumb Player</h1>
     <p><em>A Flash video player which has no Flash user interface and no error handling.</em></p>
@@ -95,6 +119,28 @@
       Does supports more than one video/player at a time. Probably only works with progressive video. "Tested" in IE 7, Safari, Chrome and Firefox 3.5, but not heavily yet.
       Doesn't show a buffering state.
     </p>
+    
+    <div class="dumb_example">
+      <h3>A dumb example</h3>
+    
+  		<div id="flash_movie" style="width:270px; height:360px">
+  		  <a href="#">Click me to get a video</a>.
+  		</div>
+
+  		<script type="text/javascript" charset="utf-8">
+  		  //video.ui.template($(".video_template"))
+
+  		  var vp;
+  		  $(document).ready(function(){
+  		    $("#flash_movie").click(function(){
+            vp = dumb_player.create("flash_movie", "assets/dumb_example.m4v");
+            return false;
+          });
+  		  });
+
+  		</script>
+  	</div>
+    
     
     <h2>Basic Usage</h2>
     <ol>
@@ -210,24 +256,5 @@
     </ul>
     
     <hr/>
-    
-    <h2>And now for a dumb example</h2>
-    
-		<div id="flash_movie" style="width:270px; height:360px">
-		  <a href="#">Click me to get a video</a>.
-		</div>
-
-		<script type="text/javascript" charset="utf-8">
-		  //video.ui.template($(".video_template"))
-
-		  var vp;
-		  $(document).ready(function(){
-		    $("#flash_movie").click(function(){
-          vp = dumb_player.create("flash_movie", "assets/dumb_example.m4v");
-          return false;
-        });
-		  });
-
-		</script>
 	</body>
 </html>
