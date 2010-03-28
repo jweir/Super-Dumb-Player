@@ -34,7 +34,7 @@
   }
 
 
-  function create(element, video_src){
+  function create(element, file_src){
     var element     = $(element),
         id          = element.attr("id"), //REDUNDANT
         flashvars   = parse_attributes(element),
@@ -43,7 +43,7 @@
         obj         = $("#"+id),
         player      = function() {return $("#"+id)[0]},
         original_state = obj.clone(true),
-        src         = video_src;
+        src         = file_src;
 
     dumb_player.ui.create(obj);
 
@@ -69,11 +69,11 @@
         }
     }
 
-    $("#"+id).parent().bind("videoPlay."+id, self.play)
-      .bind("videoPause."+id, self.pause)
-      .bind("videoSeek."+id, function(e,d){self.seek(d)})
-      .bind("videoToggle."+id, self.toggle)
-      .bind("videoToggleVolume."+id, self.toggle_volume)
+    $("#"+id).parent().bind("sdpPlay."+id, self.play)
+      .bind("sdpPause."+id, self.pause)
+      .bind("sdpSeek."+id, function(e,d){self.seek(d)})
+      .bind("sdpToggle."+id, self.toggle)
+      .bind("sdpToggleVolume."+id, self.toggle_volume)
       .bind("flashLoaded."+id, function(){ self.load(src).volume(); return self;});
 
     return self;
@@ -132,19 +132,19 @@
     dumb_player.ui.scrubber.create(id, container);
 
     container.find(".volume").click(function(){
-      dumb_player.event(id, "videoToggleVolume");
+      dumb_player.event(id, "sdpToggleVolume");
     });
 
     container.find(".state").click(function(){
-      dumb_player.event(id, "videoToggle");
+      dumb_player.event(id, "sdpToggle");
     });
 
-    container.bind("videoState."+id, function(event, state){
+    container.bind("sdpState."+id, function(event, state){
       container.find(".state").find(".play, .pause").hide();
       container.find(".state ."+ (state? "play":"pause")).show();
     });
 
-    container.bind("videoVolume."+id, function(event, is_on){
+    container.bind("sdpVolume."+id, function(event, is_on){
       container.find(".volume").find(".on, .off").hide();
       container.find(".volume ."+ (is_on? "on":"off")).show();
     });
@@ -170,22 +170,22 @@
         start: function(){
           is_dragging = true;
           before_drag_state = player_state;
-          dumb_player.event(id, "videoPause")
+          dumb_player.event(id, "sdpPause")
         },
         drag: function(e, u){
-          dumb_player.event(id, "videoSeek", 100*(u.position.left/(track.width()-thumb.width()))+"%")
+          dumb_player.event(id, "sdpSeek", 100*(u.position.left/(track.width()-thumb.width()))+"%")
         },
         stop: function(){
           is_dragging = false;
-          if(before_drag_state) dumb_player.event(id, "videoPlay");
+          if(before_drag_state) dumb_player.event(id, "sdpPlay");
         },
         containment: buffer,
         scroll: false
     });
 
-    container.bind("videoState."+id, function(e,s){player_state = s;})
+    container.bind("sdpState."+id, function(e,s){player_state = s;})
 
-    container.bind("videoUpdate."+id, function(event, info){
+    container.bind("sdpUpdate."+id, function(event, info){
       time.text(dumb_player.ui.time_formater()(info.duration));
       duration.text(dumb_player.ui.time_formater()(info.time));
       buffer.css("width", info.loaded * track.width());

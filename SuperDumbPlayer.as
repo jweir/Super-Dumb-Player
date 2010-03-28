@@ -170,16 +170,16 @@ package {
     }
     
     function externalUpdateVolume(){
-      ExternalInterface.call("dumb_player.event", player_id, 'videoVolume', (stream.soundTransform.volume > 0));
+      ExternalInterface.call("dumb_player.event", player_id, 'sdpVolume', (stream.soundTransform.volume > 0));
     }
     
     function externalUpdateState(){
-      ExternalInterface.call("dumb_player.event", player_id, 'videoState', is_playing);
+      ExternalInterface.call("dumb_player.event", player_id, 'sdpState', is_playing);
     }
     
     function externalUpdatePostion(){
       if(metaDataStore === undefined) return false;
-      ExternalInterface.call("dumb_player.event", player_id, 'videoUpdate', {
+      ExternalInterface.call("dumb_player.event", player_id, 'sdpUpdate', {
         time      : stream.time,
         duration  : metaDataStore.duration,
         percentage: stream.time/metaDataStore.duration * 100,
