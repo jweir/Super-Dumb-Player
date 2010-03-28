@@ -44,10 +44,15 @@ package {
       
   	  addChild(video);
   	  publicMethods();
-  	  player_id = LoaderInfo(this.loaderInfo).parameters["target_id"];
+  	  player_id = param("target_id");
   	  
-  	  //ExternalInterface.call("video.initialized", player_id);
   	  ExternalInterface.call("dumb_player.event", player_id, 'flashLoaded');
+    }
+    
+    var params = {};
+    
+    function param(name){
+      return params[name] = params[name] || LoaderInfo(this.loaderInfo).parameters[name];
     }
     
     function playState(state){
@@ -65,10 +70,13 @@ package {
       if(stream){ stream.close(); }
       playState(true)
 
-			stream.play(url, 10);
+			stream.play(url, 0);
 			stream.client = {onMetaData: onMetaData};
 			video.attachNetStream(stream);
 			stream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+			if(param("auto_play") == "off"){
+			  pause(); 
+			}
     }
     
     function pause(){
@@ -132,6 +140,7 @@ package {
     
     function onMetaData(data){
       metaDataStore = data;
+      trace("onMetaData")
     }
     
     function onNetStatus(e){

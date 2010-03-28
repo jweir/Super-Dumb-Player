@@ -12,9 +12,32 @@
                   }
   };
 
+  $(document).ready(function(){
+    $("a.super_dumb_player").click(function(){
+      create(this, this.href);
+      return false;
+    })
+  })
 
-  function create(id, video_src){
-    var flashvars   = {target_id:id},
+  // TODO create from a link with class="super_dumb_player"
+  // TODO set auto play 
+  // TODO auto-size and resize from the flash player
+
+  function parse_attributes(element){
+    return {
+      target_id : element.attr("id"),
+      volume: element.attr("sdp_volume"),
+      auto_play: element.attr("sdp_auto_play"), // on(default), off
+      width: element.css("width"),
+      height: element.css("height")
+    }
+  }
+
+
+  function create(element, video_src){
+    var element     = $(element),
+        id          = element.attr("id"), //REDUNDANT
+        flashvars   = parse_attributes(element),
 		    params      = {allowScriptAccess: "always", allowFullScreen:"true"},
 		    attributes  = {},
         obj         = $("#"+id),
@@ -27,8 +50,8 @@
 		swfobject.embedSWF(
 		    dumb_player.player_url,
 		    id,
-		    obj.width(),
-		    obj.height(),
+		    obj.css("width"),
+		    obj.css("height"),
 		    "9.0.0", null, flashvars, params, attributes);
 
     var self = {
@@ -101,7 +124,7 @@
 
   function create(obj){
     var id = obj.attr("id"),
-        ui = $("<div class='dumb_video_player' id='dumb_player_"+id+"'></div>"),
+        ui = $("<div class='super_dumb_player' id='dumb_player_"+id+"'></div>"),
         player_state,
         container = obj.wrap(ui).parent();
 
