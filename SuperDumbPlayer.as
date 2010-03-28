@@ -21,7 +21,7 @@ package {
   
   public class SuperDumbPlayer extends Sprite {
 
-    var video, 
+    var player, 
         stream, 
         metaDataStore,
         is_playing = false,
@@ -37,12 +37,12 @@ package {
       timer = new Timer(1000/30); // update 30 times a second
   	  timer.addEventListener(TimerEvent.TIMER, whilePlaying);
       
-      video = new Video();
+      player = new Video();
       var connection = new NetConnection();
 			connection.connect(null);
       stream = new NetStream(connection);
       
-  	  addChild(video);
+  	  addChild(player);
   	  publicMethods();
   	  player_id = param("target_id");
   	  
@@ -72,7 +72,7 @@ package {
 
 			stream.play(url, 0);
 			stream.client = {onMetaData: onMetaData};
-			video.attachNetStream(stream);
+			player.attachNetStream(stream);
 			stream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 			if(param("auto_play") == "off"){
 			  pause(); 
@@ -95,8 +95,6 @@ package {
       is_playing ? pause() : resume();
     }
     
-    // TODO add a method for when the movie has stopped
-    
     // seeks either the time or a percentage, if the time is a string with a % '50%'
     function seek(time){
       if((time+"").match(/%/)){
@@ -116,9 +114,6 @@ package {
 			ExternalInterface.addCallback("dumb_togglePlayPause", togglePlayPause)
     }
     
-    // click video to pause/resume
-    // callback to update status via timer
-
     function status(){
       return {
         	bufferLength : stream.bufferLength,
@@ -159,8 +154,8 @@ package {
       	  break;
       	break;
       }
-			video.width = video.videoWidth;
-			video.height = video.videoHeight;
+			player.width = player.videoWidth;
+			player.height = player.videoHeight;
 		}
 		
     function whilePlaying(e){
