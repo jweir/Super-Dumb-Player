@@ -19,10 +19,7 @@
     })
   })
 
-  // TODO create from a link with class="super_dumb_player"
-  // TODO set auto play 
-  // TODO auto-size and resize from the flash player
-
+  // TODO document  auto play 
   function parse_attributes(element){
     return {
       target_id : element.attr("id"),
@@ -64,6 +61,9 @@
         remove : function(){ $(player()).replaceWith(original_state);},
         toggle : function(){ player().dumb_togglePlayPause(); return self;},
         resize : function(h,w){ $(player()).css({width:w, height:h}); return self;},
+        flash_event: function(func){
+          $("#"+id).parent().bind("sdpFlashEvent."+id, function(_, flashEvent){func(flashEvent);})
+        },
         toggle_volume : function() {
           (player().dumb_volume() > 0) ? player().dumb_volume(0) : player().dumb_volume(0.8);
         }
@@ -74,7 +74,7 @@
       .bind("sdpSeek."+id, function(e,d){self.seek(d)})
       .bind("sdpToggle."+id, self.toggle)
       .bind("sdpToggleVolume."+id, self.toggle_volume)
-      .bind("flashLoaded."+id, function(){ self.load(src).volume(); return self;});
+      .bind("sdpFlashLoaded."+id, function(){ self.load(src).volume(); return self;});
 
     return self;
   }

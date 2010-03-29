@@ -18,6 +18,7 @@ package {
 	import flash.events.NetStatusEvent;
   import flash.utils.Timer;
   import flash.events.TimerEvent;
+  import flash.events.MouseEvent;
   
   public class SuperDumbPlayer extends Sprite {
 
@@ -46,7 +47,48 @@ package {
   	  publicMethods();
   	  player_id = param("target_id");
   	  
-  	  ExternalInterface.call("dumb_player.event", player_id, 'flashLoaded');
+  	  ExternalInterface.call("dumb_player.event", player_id, 'sdpFlashLoaded');
+  	  initMouseEvents();
+    }
+    
+    var eventCapture;
+    
+    function initMouseEvents(){
+      eventCapture = new Sprite();
+      eventCapture.graphics.beginFill(0xFFFFFF, 0);
+      eventCapture.graphics.drawRect(0, 0, 10,10);
+      addChild(eventCapture);
+      
+      var events = ["MOUSE_DOWN","MOUSE_MOVE","MOUSE_OUT","MOUSE_OVER","MOUSE_UP","MOUSE_WHEEL"];
+      for(var i = 0; i < events.length; i++){
+        addEventListener(MouseEvent[events[i]], mouseEvent);
+      }
+    }
+    
+    function mouseEvent(event){
+      var obj = {};
+      
+      var p = [
+        "type",
+        "bubbles",   
+        "cancelable",   
+        "eventPhase",
+        "localX",       
+        "localY",       
+        "stageX",       
+        "stageY",
+        "relatedObject", 
+        "ctrlKey",
+        "altKey", 
+        "shiftKey", 
+        "buttonDown", 
+        "delta"];
+      
+      for(var i = 0; i < p.length; i++) {
+        obj[p[i]] = event[p[i]];
+      }
+
+      ExternalInterface.call("dumb_player.event", player_id, 'sdpFlashEvent', obj);
     }
     
     var params = {};
@@ -154,6 +196,8 @@ package {
       	  break;
       	break;
       }
+      eventCapture.width = player.videoWidth;
+      eventCapture.height = player.videoHeight;
 			player.width = player.videoWidth;
 			player.height = player.videoHeight;
 		}

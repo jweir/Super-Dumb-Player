@@ -25,6 +25,10 @@
         width:800px;
       }
       
+      pre {
+        margin:0;
+      }
+      
       h1 {
         font-family:'Comic Sans', 'Comic Sans MS',cursive;
       }
@@ -126,6 +130,10 @@
       Doesn't show a buffering state.
     </p>
     
+    <p>
+      To listen for Flash events see <a href="#flash_events">Flash Events</a>
+    </p>
+    
     <div class="dumb_example">
       <h3>A dumb example</h3>
     
@@ -153,13 +161,12 @@
       <li>Create an element to contain your video.  
           It must have a unique <b>id</b> and should include <b>height</b> 
           and <b>width</b> styles. This element and its contents will be 
-          replaced by the flash movie.  If Flash it not available this element 
-          will be left alone.
+          replaced by the flash movie.
       </li>
       <li>Create the player.
         <p>
           <code>
-            vp = dumb_player.create(dom_element, "vide_file_path.m4v");
+            vp = dumb_player.create(dom_element, "video_file_path.m4v");
           </code>
         </p>
     </ol>
@@ -257,6 +264,33 @@
       <li>
         <h3>instance.toggle_volume() <span class="returns">&rArr; instance</span></h3>
         Toggle volume on or off.
+      </li>
+    </ul>
+    <a name="flash_events"></a>
+    <h2>Flash Events</h2>
+    <p>
+      The following Flash events are captured:
+      <b>MOUSE_DOWN, MOUSE_MOVE, MOUSE_OUT, MOUSE_OVER, MOUSE_UP, MOUSE_WHEEL</b>
+    </p>
+    <p>
+      By default these events are ignored.  If you wish to do anything with them you need to create a function to process them. 
+    </p>
+    <ul class='api'>
+      <li>
+        <h3>instance.flash_event(func) <span class="returns">&rArr; null</span></h3>
+        Use this method to capture mouse events which occur in the Flash Player.
+        <p>
+          <code>func</code> is a function which takes one argument, an object which has all the properties of
+          a <a href="http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/flash/events/MouseEvent.html">AS3 MouseEvent</a>
+        </p>
+        <p>
+          <b>For example</b>, to toggle pause/play in a movie with a mouse click:
+          <pre><code>instance.flash_event(function(event){
+  if(event.type == "mouseUp") {
+    instance.toggle();
+  }
+})
+          </code></pre>
       </li>
       
     </ul>
