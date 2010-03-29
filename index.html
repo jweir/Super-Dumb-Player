@@ -33,6 +33,11 @@
         font-family:'Comic Sans', 'Comic Sans MS',cursive;
       }
       
+      h2 {
+        border-top:2px #EEE solid;
+        padding:20px 0 0;
+      }
+      
       ol li {
         margin:0.5em 0;
       }
@@ -66,7 +71,7 @@
       }
       
       a {
-        color:#F60;
+        color:#C30;
       }
       
       .dumb_example {
@@ -115,17 +120,20 @@
     </p>
     <p>
       Get the source and what not at the <a href="http://github.com/jweir/Super-Dumb-Player/"> Github</a> page.
-    <h2>Requirements</h2>
-    <ol>
-      <li>jQuery</li>
-      <li>jQuery UI with Draggable</li>
-      <li>swfobject</li>
-    </ol>
-    
-    <h2>UnFeatures</h2>
+    <p>
+      <b>Requirements</b>
+        <a href="http://jquery.com/">jQuery</a>, 
+        <a href="http://jqueryui.com/">jQuery UI with Draggable</a> and
+        <a href="code.google.com/p/swfobject">swfobject</a>.
+    </p>
+    <p>
+      Copyright 2010 by <a href="http://github.com/jweir">John Weir</a>
+      licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT license.</a>
+    </p>
+    <h2>Unfeatures</h2>
     <p>
       Supports more than one video/player at a time. 
-      Probably only works with progressive video. 
+      Probably only work with progressive video.
       "Tested" in IE 7, Safari, Chrome and Firefox 3.5, but not heavily yet.
       Doesn't show a buffering state.
     </p>
@@ -135,77 +143,92 @@
     </p>
     
     <div class="dumb_example">
-      <h3>A dumb example</h3>
-    
-  		<div id="flash_movie" style="width:270px; height:360px">
-  		  <a href="#">Click me to get a video</a>.
-  		</div>
+      <b>Click the image for a dumb example</b>
+      <div id='player'>
+        <img src='assets/still_from_video.png'/>
+      </div>
 
-  		<script type="text/javascript" charset="utf-8">
-  		  //video.ui.template($(".video_template"))
+      <script type="text/javascript">
+        var player;
 
-  		  var vp;
-  		  $(document).ready(function(){
-  		    $("#flash_movie").click(function(){
-            vp = dumb_player.create($("#flash_movie"), "assets/dumb_example.m4v");
-            return false;
-          });
-  		  });
-
-  		</script>
+        $("#player").click(function(){
+          player = dumb_player.create(this, 'assets/dumb_example.m4v');
+        })
+      </script>
   	</div>
     
     
     <h2>Basic Usage</h2>
-    <ol>
-      <li>Create an element to contain your video.  
-          It must have a unique <b>id</b> and should include <b>height</b> 
-          and <b>width</b> styles. This element and its contents will be 
-          replaced by the flash movie.
-      </li>
-      <li>Create the player.
-        <p>
-          <code>
-            vp = dumb_player.create(dom_element, "video_file_path.m4v");
-          </code>
-        </p>
-    </ol>
+    <p>1. Create an element to contain your video.  
+        It must have a unique <b>id</b>. it should include <b>height</b> 
+        and <b>width</b> styles or other be the dimensions you want the player to be. This element and its contents will be 
+        replaced by the flash movie.
+    </p>
+    <p>
+      <code>
+        &lt;div id=&#x27;unique_id&#x27; style=&quot;width:420px; height:360px&quot;&gt;This is where your player will go&lt;/div&gt;
+      </code>
+    </code>
+      
+    <p>2. Create the player. Call <code>create</code> with the target element and the url to the video.</p>
+    <p>
+      <code>
+        vp = dumb_player.create($("#unique_id"), "video_file_path.m4v");
+      </code>
+    </p>
+    
+    <b>For Example</b>
+    <code><pre>
+
+&lt;div id=&#x27;player&#x27;&gt;
+  &lt;img src=&#x27;assets/still_from_video.png&#x27;/&gt;
+&lt;/div&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+  var player;
+
+  $(&quot;#player&quot;).click(function(){
+    player = dumb_player.create(this, &#x27;assets/dumb_example.m4v&#x27;);
+  })
+&lt;/script&gt;
+    </pre></code>
     
     <h2>Custom Templates &amp; Using Canvas</h2>
     <p> 
-      The player does have a built in HTML interface.  
-      Use CSS to style the ui.  Each element in the UI requires a specific class name, see below.
+      The player has a built in HTML interface template, but no CSS style. So create some CSS to give the UI a useable look.
+      Each element in the UI uses a specific class name, see below.
     </p>
     <p>
-      This template can be replaced using <code>dumb_player.ui.template(template_source)</code>. You must replace the template before you create the player.
+      The interface template can be replaced using <code>dumb_player.ui.template(template_source)</code>. You must replace the template before you create the player.
     </p>
     <p>
-      The UI does not need to have all, or any, of the elements though. No errors should occur if something is missing.
-    </p>
-    <p>
-      It is possible to use a graphics library, like Raphael, to really customize the look.
+      <em>The UI does not need to have all, or any, of the elements.</em> No errors should occur if something is missing.
     </p>
     <pre><code>
-      &lt;div class=&#x27;dump_player_ui&#x27;&gt;
-        &lt;span class=&#x27;duration&#x27;/&gt;
-        &lt;span class=&#x27;time&#x27;/&gt;
-        &lt;div class=&#x27;scrubber&#x27;&gt;
-          &lt;div class=&#x27;track&#x27;&gt;
-            &lt;div class=&#x27;buffer&#x27;&gt;
-              &lt;div class=&#x27;thumb&#x27;/&gt;
-            &lt;/div&gt;
-          &lt;/div&gt;
-        &lt;/div&gt;
-        &lt;button class=&#x27;state&#x27;&gt;
-          &lt;span class=&#x27;play&#x27;&gt;Pause&lt;/span&gt;
-          &lt;span class=&#x27;pause&#x27;&gt;Play&lt;/span&gt;
-        &lt;/button&gt;
-        &lt;button class=&#x27;volume&#x27;&gt;
-          &lt;span class=&#x27;on&#x27;&gt;Mute&lt;/span&gt;
-          &lt;span class=&#x27;off&#x27;&gt;Unmute&lt;/span&gt;
-        &lt;/button&gt;
+&lt;div class=&#x27;dump_player_ui&#x27;&gt;
+  &lt;span class=&#x27;duration&#x27;/&gt;
+  &lt;span class=&#x27;time&#x27;/&gt;
+  &lt;div class=&#x27;scrubber&#x27;&gt;
+    &lt;div class=&#x27;track&#x27;&gt;
+      &lt;div class=&#x27;buffer&#x27;&gt;
+        &lt;div class=&#x27;thumb&#x27;/&gt;
       &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;button class=&#x27;state&#x27;&gt;
+    &lt;span class=&#x27;play&#x27;&gt;Pause&lt;/span&gt;
+    &lt;span class=&#x27;pause&#x27;&gt;Play&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class=&#x27;volume&#x27;&gt;
+    &lt;span class=&#x27;on&#x27;&gt;Mute&lt;/span&gt;
+    &lt;span class=&#x27;off&#x27;&gt;Unmute&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
     </code></pre>
+    
+    <p>
+      <b>It is possible to use a graphics library, like Raphael, to really customize the look.</b>
+    </p>
     
     <h2>API</h2>
     <ul class="api">

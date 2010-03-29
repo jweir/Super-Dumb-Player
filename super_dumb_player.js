@@ -1,7 +1,6 @@
-// TODO allow multiple players
-// TODO allow skinning
-// 177 loc
-
+// Hi!
+// Copyright 2010 by John Weir, john@famedriver.com
+// Licensed under the MIT license. (feel free to use this)
 (function(){
 
   window.dumb_player = {
