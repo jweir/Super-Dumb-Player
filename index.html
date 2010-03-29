@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title>Super Dumb Player - A Flash video player with HTML user interface</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<script type="text/javascript" src="vendor/swfobject.js"></script>
+		<script type="text/javascript" src="vendor/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="super_dumb_player.js"></script>
+		<script type="text/javascript" src="vendor/jquery-ui-1.8.custom.min.js"></script>
+
+		<script type="text/javascript">
+		var flashvars  = {};
+		var params     = {allowScriptAccess: "always", allowFullScreen:"true"};
+		var attributes = {};
+
+		// swfobject.embedSWF("fdvideo.swf", "flash_movie", 426, 320, "9.0.0", null, flashvars, params, attributes)
+		</script>
+		<style type="text/css" media="screen">
+		
+		  body {
+        background:#FFF;
+        font:14px/18px helvetica, arial;
+        margin:40px;
+        color:#000;
+        width:800px;
+      }
+      
+      h1 {
+        font-family:'Comic Sans', 'Comic Sans MS',cursive;
+      }
+      
+      ol li {
+        margin:0.5em 0;
+      }
+      
+      ul.api {
+        list-style:none;
+        padding:0;
+        margin:1em 0;
+      }
+      
+      ul.api li{
+        margin:1em 0;
+      }
+      
+      ul.api h3 {
+        color: #900;
+        font-size:14px;
+        margin:0;
+      }
+      
+      ul.api .args {
+        color: #099;
+      }
+      
+      ul.api .returns {
+        color: #999;
+      }
+      
+      code {
+        color: #049;
+      }
+      
+      a {
+        color:#F60;
+      }
+      
+      .dumb_example {
+        float:right;
+        width:270px;
+        padding: 10px;
+        margin: 10px;
+        background:#EEE;
+      }
+		
+		  object {
+		    border:1px #FFF solid;
+		  }
+      
+      .duration, .time, .state, .volume {
+        margin: 2px;
+        font-size:10px; 
+        padding:2px;
+        background: #666;
+        color:#FFF;
+        position:relative;
+        float:left;
+        width:40px;
+        text-align:center;
+      }
+      
+		  .scrubber {
+		    position:relative;
+		  }
+		  .scrubber .indicator {
+		    display:block;
+		  }
+		  .scrubber .thumb {cursor:pointer; position:absolute; left:0px; top:0px; height:10px; width:10px; background:#000; z-Index:99;}
+		  .scrubber .track {position:relative; height:10px; width:270px; background:#999; z-Index:1}
+		  .scrubber .buffer {position:absolute; left:0px; top:0px; height:10px; width:100px; background:#CCC; z-Index:50}
+
+		</style>
+	</head>
+	<body>
+	  
+	  
+	  <img src="assets/icon.jpg">
+    <h1>Super Dumb Player</h1>
+    <p>
+      <em>A Flash video player which has no Flash user interface and no error handling.</em>
+    </p>
+    <p>
+      Get the source and what not at the <a href="http://github.com/jweir/Super-Dumb-Player/"> Github</a> page.
+    <h2>Requirements</h2>
+    <ol>
+      <li>jQuery</li>
+      <li>jQuery UI with Draggable</li>
+      <li>swfobject</li>
+    </ol>
+    
+    <h2>UnFeatures</h2>
+    <p>
+      Supports more than one video/player at a time. 
+      Probably only works with progressive video. 
+      "Tested" in IE 7, Safari, Chrome and Firefox 3.5, but not heavily yet.
+      Doesn't show a buffering state.
+    </p>
+    
+    <div class="dumb_example">
+      <h3>A dumb example</h3>
+    
+  		<div id="flash_movie" style="width:270px; height:360px">
+  		  <a href="#">Click me to get a video</a>.
+  		</div>
+
+  		<script type="text/javascript" charset="utf-8">
+  		  //video.ui.template($(".video_template"))
+
+  		  var vp;
+  		  $(document).ready(function(){
+  		    $("#flash_movie").click(function(){
+            vp = dumb_player.create($("#flash_movie"), "assets/dumb_example.m4v");
+            return false;
+          });
+  		  });
+
+  		</script>
+  	</div>
+    
+    
+    <h2>Basic Usage</h2>
+    <ol>
+      <li>Create an element to contain your video.  
+          It must have a unique <b>id</b> and should include <b>height</b> 
+          and <b>width</b> styles. This element and its contents will be 
+          replaced by the flash movie.  If Flash it not available this element 
+          will be left alone.
+      </li>
+      <li>Create the player.
+        <p>
+          <code>
+            vp = dumb_player.create(dom_element, "vide_file_path.m4v");
+          </code>
+        </p>
+    </ol>
+    
+    <h2>Custom Templates &amp; Using Canvas</h2>
+    <p> 
+      The player does have a built in HTML interface.  
+      Use CSS to style the ui.  Each element in the UI requires a specific class name, see below.
+    </p>
+    <p>
+      This template can be replaced using <code>dumb_player.ui.template(template_source)</code>. You must replace the template before you create the player.
+    </p>
+    <p>
+      The UI does not need to have all, or any, of the elements though. No errors should occur if something is missing.
+    </p>
+    <p>
+      It is possible to use a graphics library, like Raphael, to really customize the look.
+    </p>
+    <pre><code>
+      &lt;div class=&#x27;dump_player_ui&#x27;&gt;
+        &lt;span class=&#x27;duration&#x27;/&gt;
+        &lt;span class=&#x27;time&#x27;/&gt;
+        &lt;div class=&#x27;scrubber&#x27;&gt;
+          &lt;div class=&#x27;track&#x27;&gt;
+            &lt;div class=&#x27;buffer&#x27;&gt;
+              &lt;div class=&#x27;thumb&#x27;/&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;button class=&#x27;state&#x27;&gt;
+          &lt;span class=&#x27;play&#x27;&gt;Pause&lt;/span&gt;
+          &lt;span class=&#x27;pause&#x27;&gt;Play&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button class=&#x27;volume&#x27;&gt;
+          &lt;span class=&#x27;on&#x27;&gt;Mute&lt;/span&gt;
+          &lt;span class=&#x27;off&#x27;&gt;Unmute&lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+    </code></pre>
+    
+    <h2>API</h2>
+    <ul class="api">
+      <li><h3>dumb_player.player_source</h3>
+        Set this property to point to the URL for the super_dumb_player.swf
+      </li>
+      <li><h3>
+        dumb_player.create(<span class='args'>target_element, video_src</span>) 
+        <span class="returns">&rArr; dumb_player instance</span></h3>
+        Creates a new player instance.  Playing is always auto.
+      </li>
+      <li>
+        <h3>dumb_player.ui.template()
+          <span class="returns">&rArr; template source</span>
+        </h3>
+        <h3>dumb_player.ui.template(<span class='args'>template_source</span>)
+          <span class="returns">&rArr; template source</span> 
+        </h3>
+        This is optional.
+        Set or retrieves the html template to use for the UI.  A default UI will be used if you do not set one.
+        
+      </li>
+      <li>
+        <h3>dumb_player.ui.time_formater(<span class='args'>function</span>)</h3>
+        This is optional.
+        The time formatter is a function applied to the duration and time data. Use this function
+        to manipulate the incoming decimal data for rounding.
+      </li>
+    </ul>
+
+    <h2>Instance API</h2>
+    <ul class="api">
+      <li>
+        <h3>instance.player() <span class="returns">&rArr; the object/embed element</span> </h3>
+        Return the object or emended element containing the Flash player.
+      </li>
+      <li>
+        <h3>instance.play() <span class="returns">&rArr; instance</span></h3>
+        Play the movie, if it is paused.
+      </li>
+      <li>
+        <h3>instance.pause() <span class="returns">&rArr; instance</span></h3>
+      </li>
+      <li>
+        <h3>instance.load(src) <span class="returns">&rArr; instance</span></h3>
+        Load a new movie and start playing it
+      </li>
+      <li>
+        <h3>instance.remove()</h3>
+        Remove the player and replace it with the original content.
+      </li>
+      <li>
+        <h3>instance.toggle() <span class="returns">&rArr; instance</span></h3>
+        Toggle play/pause.
+      </li>
+      <li>
+        <h3>instance.toggle_volume() <span class="returns">&rArr; instance</span></h3>
+        Toggle volume on or off.
+      </li>
+      
+    </ul>
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-605430-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+      })();
+
+    </script>
+	</body>
+</html>
