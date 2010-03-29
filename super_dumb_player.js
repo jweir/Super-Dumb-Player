@@ -61,10 +61,12 @@
         toggle : function(){ player().dumb_togglePlayPause(); return self;},
         resize : function(h,w){ $(player()).css({width:w, height:h}); return self;},
         flash_event: function(func){
-          $("#"+id).parent().bind("sdpFlashEvent."+id, function(_, flashEvent){func(flashEvent);})
+          $("#"+id).parent().bind("sdpFlashEvent."+id, function(_, flashEvent){func(flashEvent);});
+          return self;
         },
         toggle_volume : function() {
           (player().dumb_volume() > 0) ? player().dumb_volume(0) : player().dumb_volume(0.8);
+          return self;
         }
     }
 
