@@ -116,7 +116,7 @@
 	  <img src="assets/icon.jpg">
     <h1>Super Dumb Player</h1>
     <p>
-      <em>A Flash video player which has no Flash user interface and no error handling.</em>
+      <em>A Flash video player which has no Flash user interface, no error handling and no styled user interface.</em>
     </p>
     <p>
       Get the source and what not at the <a href="http://github.com/jweir/Super-Dumb-Player/"> Github</a> page.
@@ -130,10 +130,20 @@
       Copyright 2010 by <a href="http://github.com/jweir">John Weir</a>
       licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT license.</a>
     </p>
+    <h2>What it is</h2>
+    <p>
+      From time to time I need to play video and need to get a Flash video player.  But they all are a pain to skin.
+      So I decided to make one which has the entire user interface created in HTML.
+    </p>
+    <p>
+      There is no default look.  You need to supply your own CSS.  The player is kept very simple and very lightweight.
+      It doesn't hold your hand, but you shouldn't need to hold its hand.  Just give a little push and be done with it.
+    </p>
+    
     <h2>Unfeatures</h2>
     <p>
       Supports more than one video/player at a time. 
-      Probably only work with progressive video.
+      Probably only works with progressive video.
       "Tested" in IE 7, Safari, Chrome and Firefox 3.5, but not heavily yet.
       Doesn't show a buffering state.
     </p>
@@ -300,7 +310,7 @@
     </p>
     <ul class='api'>
       <li>
-        <h3>instance.flash_event(func) <span class="returns">&rArr; null</span></h3>
+        <h3>instance.flash_event(func) <span class="returns">&rArr; instance</span></h3>
         Use this method to capture mouse events which occur in the Flash Player.
         <p>
           <code>func</code> is a function which takes one argument, an object which has all the properties of
