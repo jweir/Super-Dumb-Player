@@ -1,0 +1,21 @@
+== Super Dumb Player
+
+A Flash video player with an HTML UI.
+
+See http://jweir.github.com/Super-Dumb-Player for details
+
+=== A quick example
+  
+  <b>Click the image for a dumb example</b>
+  <div id='player'>
+    <img src='assets/still_from_video.png'/>
+  </div>
+  
+  <script type="text/javascript">
+    var player;
+  
+    $("#player").click(function(){
+      player = dumb_player.create(this, 'assets/dumb_example.m4v');
+    })
+  </script>
+  
