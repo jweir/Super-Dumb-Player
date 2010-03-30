@@ -32,7 +32,7 @@ package {
     function SuperDumbPlayer(){
       ExternalInterface.marshallExceptions = true;
       
-      stage.scaleMode = StageScaleMode.NO_SCALE;
+      stage.scaleMode = StageScaleMode.SHOW_ALL;
       stage.align = StageAlign.TOP_LEFT;
       
       timer = new Timer(1000/30); // update 30 times a second
