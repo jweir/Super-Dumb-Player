@@ -90,7 +90,7 @@
   };
 
   var ui_template = $("\
-    <div class='dump_player_ui'>\
+    <div class='dumb_player_ui'>\
       <div class='scrubber'>\
         <div class='track'>\
           <div class='buffer'>\
