@@ -32,7 +32,9 @@ package {
     function SuperDumbPlayer(){
       ExternalInterface.marshallExceptions = true;
       
-      stage.scaleMode = StageScaleMode.SHOW_ALL;
+      stage.scaleMode = param("stage_scale_mode") || StageScaleMode.NO_SCALE;
+      trace("Scale Mode "+stage.scaleMode);
+      
       stage.align = StageAlign.TOP_LEFT;
       
       timer = new Timer(1000/30); // update 30 times a second
@@ -94,8 +96,9 @@ package {
     var params = {};
     
     function param(name){
-      return params[name] = params[name] || LoaderInfo(this.loaderInfo).parameters[name];
-    }
+      var p = params[name] = params[name] || LoaderInfo(this.loaderInfo).parameters[name];
+      return p+"" == "undefined" ? undefined : p;
+     }
     
     function playState(state){
       if(state){
@@ -117,6 +120,7 @@ package {
 			player.attachNetStream(stream);
 			stream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
 			if(param("auto_play") == "off"){
+			  stream.seek(1);
 			  pause(); 
 			}
     }
@@ -177,8 +181,11 @@ package {
     
     function onMetaData(data){
       metaDataStore = data;
-      trace("onMetaData")
+      trace("onMetaData");
+      setupDimensions(data);
     }
+    
+    var first_time_buffer_full = false;
     
     function onNetStatus(e){
       trace(e.info.code);
@@ -190,16 +197,35 @@ package {
       	case "NetStream.Play.StreamNotFound":
       		trace("Stream not found.");
       	break;
+      	case "NetStream.Buffer.Full":
+      	  if(!first_time_buffer_full){
+      	    trace("First time buffer full");
+      	    first_time_buffer_full = true;
+      	    stream.seek(0);
+      	  }
+      	  break;
+      	case "NetStream.Play.Start":
+      	  
+      	  break;
       	case "NetStream.Play.Stop":
       	  trace("Movie is over")
       	  playState(false);
       	  break;
       	break;
       }
-      eventCapture.width = player.videoWidth;
-      eventCapture.height = player.videoHeight;
-			player.width = player.videoWidth;
-			player.height = player.videoHeight;
+    }
+    
+    function setupDimensions(data){
+      var width = data.width > 0 ? data.width : player.videoWidth,
+          height = data.height > 0 ? data.height : player.videoHeight;
+          
+      eventCapture.width = width;
+      eventCapture.height = height;
+			player.width = width;
+			player.height = height;
+			trace("Scale Mode "+stage.scaleMode);
+			trace("Dimensions: "+ [player.width, player.height, player.scaleX, player.scaleY].join(", "));
+			trace("Stage Dimensions: "+ [stage.width, stage.height, stage.scaleX, stage.scaleY].join(", "));
 		}
 		
     function whilePlaying(e){

@@ -24,6 +24,7 @@
       target_id : element.attr("id"),
       volume: element.attr("sdp_volume"),
       auto_play: element.attr("sdp_auto_play"), // on(default), off
+      stage_scale_mode: element.attr("sdp_stage_scale_mode"), // on(default), off
       width: element.css("width"),
       height: element.css("height")
     }
