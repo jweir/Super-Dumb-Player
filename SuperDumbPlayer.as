@@ -216,16 +216,19 @@ package {
     }
     
     function setupDimensions(data){
-      var width = data.width > 0 ? data.width : player.videoWidth,
+      var width  = data.width  > 0 ? data.width  : player.videoWidth,
           height = data.height > 0 ? data.height : player.videoHeight;
           
       eventCapture.width = width;
       eventCapture.height = height;
+
 			player.width = width;
 			player.height = height;
+
 			trace("Scale Mode "+stage.scaleMode);
 			trace("Dimensions: "+ [player.width, player.height, player.scaleX, player.scaleY].join(", "));
 			trace("Stage Dimensions: "+ [stage.width, stage.height, stage.scaleX, stage.scaleY].join(", "));
+			trace("Stage Dimensions 2 : "+ [stage.stageWidth, stage.stageHeight, stage.scaleX, stage.scaleY].join(", "));
 		}
 		
     function whilePlaying(e){
