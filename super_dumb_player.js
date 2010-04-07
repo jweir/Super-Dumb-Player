@@ -35,8 +35,8 @@
     var element     = $(element),
         id          = element.attr("id"), //REDUNDANT
         flashvars   = parse_attributes(element),
-		    params      = {allowScriptAccess: "always", allowFullScreen:"true"},
-		    attributes  = {},
+        params      = {allowScriptAccess: "always", allowFullScreen:"true"},
+        attributes  = {},
         obj         = $("#"+id),
         player      = function() {return $("#"+id)[0]},
         original_state = obj.clone(true),
@@ -44,12 +44,12 @@
 
     dumb_player.ui.create(obj);
 
-		swfobject.embedSWF(
-		    dumb_player.player_url,
-		    id,
-		    obj.css("width"),
-		    obj.css("height"),
-		    "9.0.0", null, flashvars, params, attributes);
+    swfobject.embedSWF(
+        dumb_player.player_url,
+        id,
+        obj.css("width"),
+        obj.css("height"),
+        "9.0.0", null, flashvars, params, attributes);
 
     var self = {
         player : function(){ return player()},
