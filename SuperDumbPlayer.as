@@ -37,7 +37,7 @@ package {
       
       stage.align = StageAlign.TOP_LEFT;
       
-      timer = new Timer(1000/30); // update 30 times a second
+      timer = new Timer(100); // update 10 times a second
       timer.addEventListener(TimerEvent.TIMER, whilePlaying);
       
       player = new Video();
