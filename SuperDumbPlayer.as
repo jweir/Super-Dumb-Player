@@ -7,15 +7,15 @@ package {
   import flash.display.LoaderInfo;
   import flash.external.*; // woo
   import flash.display.Sprite;
-	import flash.net.NetConnection;
-	import flash.net.NetStream;
-	import flash.media.Video;
-	import flash.media.SoundTransform;
-	import flash.display.Stage;
+  import flash.net.NetConnection;
+  import flash.net.NetStream;
+  import flash.media.Video;
+  import flash.media.SoundTransform;
+  import flash.display.Stage;
   import flash.display.StageScaleMode;
   import flash.display.StageAlign;
   import flash.display.StageDisplayState;
-	import flash.events.NetStatusEvent;
+  import flash.events.NetStatusEvent;
   import flash.utils.Timer;
   import flash.events.TimerEvent;
   import flash.events.MouseEvent;
@@ -38,19 +38,19 @@ package {
       stage.align = StageAlign.TOP_LEFT;
       
       timer = new Timer(1000/30); // update 30 times a second
-  	  timer.addEventListener(TimerEvent.TIMER, whilePlaying);
+      timer.addEventListener(TimerEvent.TIMER, whilePlaying);
       
       player = new Video();
       var connection = new NetConnection();
-			connection.connect(null);
+      connection.connect(null);
       stream = new NetStream(connection);
       
-  	  addChild(player);
-  	  publicMethods();
-  	  player_id = param("target_id");
-  	  
-  	  ExternalInterface.call("dumb_player.event", player_id, 'sdpFlashLoaded');
-  	  initMouseEvents();
+      addChild(player);
+      publicMethods();
+      player_id = param("target_id");
+      
+      ExternalInterface.call("dumb_player.event", player_id, 'sdpFlashLoaded');
+      initMouseEvents();
     }
     
     var eventCapture;
@@ -115,14 +115,14 @@ package {
       if(stream){ stream.close(); }
       playState(true)
 
-			stream.play(url, 0);
-			stream.client = {onMetaData: onMetaData};
-			player.attachNetStream(stream);
-			stream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
-			if(param("auto_play") == "off"){
-			  stream.seek(1);
-			  pause(); 
-			}
+      stream.play(url, 0);
+      stream.client = {onMetaData: onMetaData};
+      player.attachNetStream(stream);
+      stream.addEventListener(NetStatusEvent.NET_STATUS, onNetStatus);
+      if(param("auto_play") == "off"){
+        stream.seek(1);
+        pause(); 
+      }
     }
     
     function pause(){
@@ -152,20 +152,20 @@ package {
     function publicMethods(){
       ExternalInterface.addCallback("dumb_play",play);
       ExternalInterface.addCallback("dumb_pause",pause);
-			ExternalInterface.addCallback("dumb_resume",resume);
-			ExternalInterface.addCallback("dumb_seek",seek);
-			ExternalInterface.addCallback("dumb_volume",volume);
-			ExternalInterface.addCallback("dumb_status",status);
-			ExternalInterface.addCallback("dumb_metaData",metaData);
-			ExternalInterface.addCallback("dumb_togglePlayPause", togglePlayPause)
+      ExternalInterface.addCallback("dumb_resume",resume);
+      ExternalInterface.addCallback("dumb_seek",seek);
+      ExternalInterface.addCallback("dumb_volume",volume);
+      ExternalInterface.addCallback("dumb_status",status);
+      ExternalInterface.addCallback("dumb_metaData",metaData);
+      ExternalInterface.addCallback("dumb_togglePlayPause", togglePlayPause)
     }
     
     function status(){
       return {
-        	bufferLength : stream.bufferLength,
-         	bufferTime : stream.bufferTime, 
-         	bytesLoaded :stream.bytesLoaded,
-         	bytesTotal : stream.bytesTotal
+          bufferLength : stream.bufferLength,
+           bufferTime : stream.bufferTime, 
+           bytesLoaded :stream.bytesLoaded,
+           bytesTotal : stream.bytesTotal
       }
     }
         
@@ -177,7 +177,7 @@ package {
         
     function metaData(){
       return metaDataStore;
-		}
+    }
     
     function onMetaData(data){
       metaDataStore = data;
@@ -194,24 +194,24 @@ package {
         case "NetStream.Seek.Notify":
           externalUpdatePostion();
           break;
-      	case "NetStream.Play.StreamNotFound":
-      		trace("Stream not found.");
-      	break;
-      	case "NetStream.Buffer.Full":
-      	  if(!first_time_buffer_full){
-      	    trace("First time buffer full");
-      	    first_time_buffer_full = true;
-      	    stream.seek(0);
-      	  }
-      	  break;
-      	case "NetStream.Play.Start":
-      	  
-      	  break;
-      	case "NetStream.Play.Stop":
-      	  trace("Movie is over")
-      	  playState(false);
-      	  break;
-      	break;
+        case "NetStream.Play.StreamNotFound":
+          trace("Stream not found.");
+        break;
+        case "NetStream.Buffer.Full":
+          if(!first_time_buffer_full){
+            trace("First time buffer full");
+            first_time_buffer_full = true;
+            stream.seek(0);
+          }
+          break;
+        case "NetStream.Play.Start":
+          
+          break;
+        case "NetStream.Play.Stop":
+          trace("Movie is over")
+          playState(false);
+          break;
+        break;
       }
     }
     
@@ -222,15 +222,15 @@ package {
       eventCapture.width = width;
       eventCapture.height = height;
 
-			player.width = width;
-			player.height = height;
+      player.width = width;
+      player.height = height;
 
-			trace("Scale Mode "+stage.scaleMode);
-			trace("Dimensions: "+ [player.width, player.height, player.scaleX, player.scaleY].join(", "));
-			trace("Stage Dimensions: "+ [stage.width, stage.height, stage.scaleX, stage.scaleY].join(", "));
-			trace("Stage Dimensions 2 : "+ [stage.stageWidth, stage.stageHeight, stage.scaleX, stage.scaleY].join(", "));
-		}
-		
+      trace("Scale Mode "+stage.scaleMode);
+      trace("Dimensions: "+ [player.width, player.height, player.scaleX, player.scaleY].join(", "));
+      trace("Stage Dimensions: "+ [stage.width, stage.height, stage.scaleX, stage.scaleY].join(", "));
+      trace("Stage Dimensions 2 : "+ [stage.stageWidth, stage.stageHeight, stage.scaleX, stage.scaleY].join(", "));
+    }
+    
     function whilePlaying(e){
       if(is_playing){
         externalUpdatePostion();
