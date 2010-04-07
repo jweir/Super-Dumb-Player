@@ -18,7 +18,7 @@
     })
   })
 
-  // TODO document  auto play 
+  // TODO document  auto play
   function parse_attributes(element){
     return {
       target_id : element.attr("id"),
@@ -60,7 +60,10 @@
         load   : function(src){ player().dumb_play(src); return self},
         remove : function(){ $(player()).replaceWith(original_state);},
         toggle : function(){ player().dumb_togglePlayPause(); return self;},
-        resize : function(h,w){ $(player()).css({width:w, height:h}); return self;},
+        resize : function(w,h){
+          $(player()).css({width:w, height:h}).attr({width:w, height:h}); return self;
+
+        },
         flash_event: function(func){
           $("#"+id).parent().bind("sdpFlashEvent."+id, function(_, flashEvent){func(flashEvent);});
           return self;
