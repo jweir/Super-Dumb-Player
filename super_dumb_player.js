@@ -44,12 +44,12 @@
 
     dumb_player.ui.create(obj);
 
-    swfobject.embedSWF(
-        dumb_player.player_url,
-        id,
-        obj.css("width"),
-        obj.css("height"),
-        "9.0.0", null, flashvars, params, attributes);
+    $("#"+id).parent().bind("sdpPlay."+id, self.play)
+      .bind("sdpPause."+id, self.pause)
+      .bind("sdpSeek."+id, function(e,d){self.seek(d)})
+      .bind("sdpToggle."+id, self.toggle)
+      .bind("sdpToggleVolume."+id, self.toggle_volume)
+      .bind("sdpFlashLoaded."+id, function(){ self.load(src).volume(); return self;});
 
     var self = {
         player : function(){ return player()},
@@ -74,12 +74,13 @@
         }
     }
 
-    $("#"+id).parent().bind("sdpPlay."+id, self.play)
-      .bind("sdpPause."+id, self.pause)
-      .bind("sdpSeek."+id, function(e,d){self.seek(d)})
-      .bind("sdpToggle."+id, self.toggle)
-      .bind("sdpToggleVolume."+id, self.toggle_volume)
-      .bind("sdpFlashLoaded."+id, function(){ self.load(src).volume(); return self;});
+    swfobject.embedSWF(
+        dumb_player.player_url,
+        id,
+        obj.css("width"),
+        obj.css("height"),
+        "9.0.0", null, flashvars, params, attributes);
+
 
     return self;
   }
