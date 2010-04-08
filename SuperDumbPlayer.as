@@ -112,6 +112,7 @@ package {
     }
 
     function play(url){
+      pause();
       if(stream){ stream.close(); }
       playState(true)
 
