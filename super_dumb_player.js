@@ -45,13 +45,6 @@
 
     dumb_player.ui.create(obj);
 
-    swfobject.embedSWF(
-        dumb_player.player_url,
-        id,
-        obj.css("width"),
-        obj.css("height"),
-        "9.0.0", null, flashvars, params, attributes);
-
     var self = {
         player : function(){ return player()},
         play   : function(){ player().dumb_resume(); return self},
@@ -82,6 +75,13 @@
       .bind("sdpToggle."+id, self.toggle)
       .bind("sdpToggleVolume."+id, self.toggle_volume)
       .bind("sdpFlashLoaded."+id, function(){ self.load(src).volume(); return self;});
+
+    swfobject.embedSWF(
+        dumb_player.player_url,
+        id,
+        obj.css("width"),
+        obj.css("height"),
+        "9.0.0", null, flashvars, params, attributes);
 
     return self;
   }
