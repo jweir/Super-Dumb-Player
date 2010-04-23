@@ -18,7 +18,7 @@
     })
   })
 
-  // TODO document  auto play
+  // TODO document  auto play, bufferTime
   function parse_attributes(element){
     return {
       target_id : element.attr("id"),
@@ -26,7 +26,8 @@
       auto_play: element.attr("sdp_auto_play"), // on(default), off
       stage_scale_mode: element.attr("sdp_stage_scale_mode"), // on(default), off
       width: element.css("width"),
-      height: element.css("height")
+      height: element.css("height"),
+      buffer_time: element.attr("sdp_buffer_time")
     }
   }
 
@@ -60,6 +61,7 @@
         load   : function(src){ player().dumb_play(src); return self},
         remove : function(){ $(player()).replaceWith(original_state);},
         toggle : function(){ player().dumb_togglePlayPause(); return self;},
+        buffer_time :function(n) {return player().dumb_bufferTime(n);},
         resize : function(w,h){
           $(player()).css({width:w, height:h}).attr({width:w, height:h}); return self;
 

@@ -44,6 +44,8 @@ package {
       var connection = new NetConnection();
       connection.connect(null);
       stream = new NetStream(connection);
+      stream.bufferTime = param("buffer_time") || 1; // Default buffertime to 1 second
+      
       
       addChild(player);
       publicMethods();
@@ -157,6 +159,7 @@ package {
       ExternalInterface.addCallback("dumb_volume",volume);
       ExternalInterface.addCallback("dumb_status",status);
       ExternalInterface.addCallback("dumb_metaData",metaData);
+      ExternalInterface.addCallback("dumb_bufferTime",bufferTime);
       ExternalInterface.addCallback("dumb_togglePlayPause", togglePlayPause)
     }
     
@@ -173,6 +176,11 @@ package {
       if(arguments[0] !== undefined) stream.soundTransform = new SoundTransform(arguments[0]);
       externalUpdateVolume();
       return stream.soundTransform.volume;
+    }
+    
+    function bufferTime(){
+      if(arguments[0] !== undefined) stream.bufferTime = arguments[0];
+      return stream.bufferTime;
     }
         
     function metaData(){
@@ -205,7 +213,6 @@ package {
           }
           break;
         case "NetStream.Play.Start":
-          
           break;
         case "NetStream.Play.Stop":
           trace("Movie is over")
@@ -236,7 +243,7 @@ package {
         externalUpdatePostion();
       }
     }
-    
+        
     function externalUpdateVolume(){
       ExternalInterface.call("dumb_player.event", player_id, 'sdpVolume', (stream.soundTransform.volume > 0));
     }
