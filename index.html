@@ -98,6 +98,10 @@
         text-align:center;
       }
       
+      .dumb_player_ui {
+        height:30px;
+      }
+      
 		  .scrubber {
 		    position:relative;
 		  }
@@ -106,7 +110,7 @@
 		  }
 		  .scrubber .thumb {cursor:pointer; position:absolute; left:0px; top:0px; height:10px; width:10px; background:#000; z-Index:99;}
 		  .scrubber .track {position:relative; height:10px; width:270px; background:#999; z-Index:1}
-		  .scrubber .buffer {position:absolute; left:0px; top:0px; height:10px; width:100px; background:#CCC; z-Index:50}
+		  .scrubber .buffer {position:absolute; left:0px; top:0px; height:10px; width:0px; background:#CCC; z-Index:50}
 
 		</style>
 	</head>
@@ -270,19 +274,24 @@
     <h2>Instance API</h2>
     <ul class="api">
       <li>
-        <h3>instance.player() <span class="returns">&rArr; the object/embed element</span> </h3>
-        Return the object or emended element containing the Flash player.
+        <h3>instance.buffer_time(n) <span class="returns">&rArr; stream.bufferTime</span></h3>
+        Set or get the number of seconds to buffer the video before playing. This can also be set via the <code>spd_buffer_time</code> attribute in the video source element.
+        <em>The default value is 1 second.</em>
+      </li>
+      <li>
+        <h3>instance.load(src) <span class="returns">&rArr; instance</span></h3>
+        Load a new movie and start playing it
+      </li>
+      <li>
+        <h3>instance.pause() <span class="returns">&rArr; instance</span></h3>
       </li>
       <li>
         <h3>instance.play() <span class="returns">&rArr; instance</span></h3>
         Play the movie, if it is paused.
       </li>
       <li>
-        <h3>instance.pause() <span class="returns">&rArr; instance</span></h3>
-      </li>
-      <li>
-        <h3>instance.load(src) <span class="returns">&rArr; instance</span></h3>
-        Load a new movie and start playing it
+        <h3>instance.player() <span class="returns">&rArr; the object/embed element</span> </h3>
+        Return the object or emended element containing the Flash player.
       </li>
       <li>
         <h3>instance.remove()</h3>
@@ -326,6 +335,38 @@
       
     </ul>
     
+    <a name="flash_events"></a>
+    <h2>HTML Attributes</h2>
+    <p>
+      The player source element can have the following attributes to overwrite the defaults.
+    </p>
+    <ul class='api'>
+      <li><h3>sdp_auto_play</h3> Set to <code>'off'</code> to not auto play the video.</li>
+      <li><h3>sdp_buffer_time</h3> Number of seconds to buffer the stream before playing, default is 1.</li>
+      <li><h3>sdp_stage_scale_mode</h3> Should be a <a href="http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/flash/display/StageScaleMode.html">StageScaleMode</a>. Default is <code>StageScaleMode.NO_SCALE</code> </li>
+      <li><h3>sdp_volume</h3>Sets the volume level from 0 to 1.</li>
+    </ul>
+    <p>
+      <b>An example</b>. Click the below example to load the video. Then click the video or play to start.
+      <div>
+      <div id='player_2' style='width:400px; height:200px; background:#EEE' sdp_auto_play='off' sdp_buffer_time='3' sdp_stage_scale_mode='exactFit' sdp_volume='0.5'>
+      </div>
+      </div>
+      <p>
+        <em>For reasons I don't understand, the video does not scale to the full width of the player.</em>
+      </p>
+
+      <script type="text/javascript">
+        $("#player_2").text($("#player_2").parent().html())
+        var player_2;
+
+        $("#player_2").click(function(){
+          player_2 = dumb_player.create(this, 'assets/dumb_example.m4v');
+          player_2.flash_event(function(event){
+              if(event.type == "mouseUp") {player_2.toggle();}});
+        })
+      </script>
+            
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
