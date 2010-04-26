@@ -34,18 +34,17 @@ package {
       
       stage.scaleMode = param("stage_scale_mode") || StageScaleMode.NO_SCALE;
       trace("Scale Mode "+stage.scaleMode);
-      
       stage.align = StageAlign.TOP_LEFT;
       
       timer = new Timer(100); // update 10 times a second
       timer.addEventListener(TimerEvent.TIMER, whilePlaying);
       
-      player = new Video();
+      player = new Video(stage.stageWidth, stage.stageHeight);
+      
       var connection = new NetConnection();
       connection.connect(null);
       stream = new NetStream(connection);
       stream.bufferTime = param("buffer_time") || 1; // Default buffertime to 1 second
-      
       
       addChild(player);
       publicMethods();
