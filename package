@@ -1,0 +1,2 @@
+#!/bin/sh
+./build && zip super_dumb_player.zip super_dumb_player.js super_dumb_player.swf vendor/**
