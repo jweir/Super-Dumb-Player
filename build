@@ -1,3 +1,3 @@
 #!/bin/sh
-mxmlc -use-network=false -default-size 640 360 -o super_dumb_player.swf -file-specs "SuperDumbPlayer.as" -warnings=false #-debug=true
+mxmlc -use-network=false -default-size 640 360 -o super_dumb_player.swf -file-specs "SuperDumbPlayer.as" -warnings=false $1 
 echo "built"
