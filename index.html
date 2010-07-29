@@ -16,7 +16,7 @@
 		// swfobject.embedSWF("fdvideo.swf", "flash_movie", 426, 320, "9.0.0", null, flashvars, params, attributes)
 		</script>
 		<style type="text/css" media="screen">
-		
+
 		  body {
         background:#FFF;
         font:14px/18px helvetica, arial;
@@ -24,56 +24,56 @@
         color:#000;
         width:800px;
       }
-      
+
       pre {
         margin:0;
       }
-      
+
       h1 {
         font-family:'Comic Sans', 'Comic Sans MS',cursive;
       }
-      
+
       h2 {
         border-top:2px #EEE solid;
         padding:20px 0 0;
       }
-      
+
       ol li {
         margin:0.5em 0;
       }
-      
+
       ul.api {
         list-style:none;
         padding:0;
         margin:1em 0;
       }
-      
+
       ul.api li{
         margin:1em 0;
       }
-      
+
       ul.api h3 {
         color: #900;
         font-size:14px;
         margin:0;
       }
-      
+
       ul.api .args {
         color: #099;
       }
-      
+
       ul.api .returns {
         color: #999;
       }
-      
+
       code {
         color: #049;
       }
-      
+
       a {
         color:#C30;
       }
-      
+
       .dumb_example {
         float:right;
         width:270px;
@@ -81,14 +81,14 @@
         margin: 10px;
         background:#EEE;
       }
-		
+
 		  object {
 		    border:1px #FFF solid;
 		  }
-      
+
       .duration, .time, .state, .volume {
         margin: 2px;
-        font-size:10px; 
+        font-size:10px;
         padding:2px;
         background: #666;
         color:#FFF;
@@ -97,11 +97,11 @@
         width:40px;
         text-align:center;
       }
-      
+
       .dumb_player_ui {
         height:30px;
       }
-      
+
 		  .scrubber {
 		    position:relative;
 		  }
@@ -115,7 +115,7 @@
 		</style>
 	</head>
 	<body>
-	  
+
     <h1>Super Dumb Player</h1>
     <p>
       <em>A Flash video player which has no Flash user interface, no error handling and no styled user interface.</em>
@@ -124,7 +124,7 @@
       Get the source and what not at the <a href="http://github.com/jweir/Super-Dumb-Player/"> Github</a> page.
     <p>
       <b>Requirements</b>
-        <a href="http://jquery.com/">jQuery</a>, 
+        <a href="http://jquery.com/">jQuery</a>,
         <a href="http://jqueryui.com/">jQuery UI with Draggable</a> and
         <a href="code.google.com/p/swfobject">swfobject</a>.
     </p>
@@ -141,19 +141,19 @@
       There is no default look.  You need to supply your own CSS.  The player is kept very simple and very lightweight.
       It doesn't hold your hand, but you shouldn't need to hold its hand.  Just give a little push and be done with it.
     </p>
-    
+
     <h2>Unfeatures</h2>
     <p>
-      Supports more than one video/player at a time. 
+      Supports more than one video/player at a time.
       Probably only works with progressive video.
       "Tested" in IE 7, Safari, Chrome and Firefox 3.5, but not heavily yet.
       Doesn't show a buffering state.
     </p>
-    
+
     <p>
       To listen for Flash events see <a href="#flash_events">Flash Events</a>
     </p>
-    
+
     <div class="dumb_example">
       <b>Click the image for a dumb example</b>
       <div id='player'  style="width:270px; height:360px">
@@ -168,12 +168,12 @@
         })
       </script>
   	</div>
-    
-    
+
+
     <h2>Basic Usage</h2>
-    <p>1. Create an element to contain your video.  
-        It must have a unique <b>id</b>. it should include <b>height</b> 
-        and <b>width</b> styles or other be the dimensions you want the player to be. This element and its contents will be 
+    <p>1. Create an element to contain your video.
+        It must have a unique <b>id</b>. it should include <b>height</b>
+        and <b>width</b> styles or other be the dimensions you want the player to be. This element and its contents will be
         replaced by the flash movie.
     </p>
     <p>
@@ -187,7 +187,7 @@
         vp = dumb_player.create($("#unique_id"), "video_file_path.m4v");
       </code>
     </p>
-    
+
     <b>For Example</b>
     <code><pre>
 
@@ -203,9 +203,9 @@
   })
 &lt;/script&gt;
     </pre></code>
-    
+
     <h2>Custom Templates &amp; Using Canvas</h2>
-    <p> 
+    <p>
       The player has a built in HTML interface template, but no CSS style. So create some CSS to give the UI a useable look.
       Each element in the UI uses a specific class name, see below.
     </p>
@@ -236,18 +236,18 @@
   &lt;/button&gt;
 &lt;/div&gt;
     </code></pre>
-    
+
     <p>
       <b>It is possible to use a graphics library, like Raphael, to really customize the look.</b>
     </p>
-    
+
     <h2>API</h2>
     <ul class="api">
       <li><h3>dumb_player.player_source</h3>
         Set this property to point to the URL for the super_dumb_player.swf
       </li>
       <li><h3>
-        dumb_player.create(<span class='args'>target_element, video_src</span>) 
+        dumb_player.create(<span class='args'>target_element, video_src</span>)
         <span class="returns">&rArr; dumb_player instance</span></h3>
         Creates a new player instance.  Playing is always auto.
       </li>
@@ -256,11 +256,11 @@
           <span class="returns">&rArr; template source</span>
         </h3>
         <h3>dumb_player.ui.template(<span class='args'>template_source</span>)
-          <span class="returns">&rArr; template source</span> 
+          <span class="returns">&rArr; template source</span>
         </h3>
         This is optional.
         Set or retrieves the html template to use for the UI.  A default UI will be used if you do not set one.
-        
+
       </li>
       <li>
         <h3>dumb_player.ui.time_formater(<span class='args'>function</span>)</h3>
@@ -312,7 +312,7 @@
       <b>MOUSE_DOWN, MOUSE_MOVE, MOUSE_OUT, MOUSE_OVER, MOUSE_UP, MOUSE_WHEEL</b>
     </p>
     <p>
-      By default these events are ignored.  If you wish to do anything with them you need to create a function to process them. 
+      By default these events are ignored.  If you wish to do anything with them you need to create a function to process them.
     </p>
     <ul class='api'>
       <li>
@@ -331,9 +331,9 @@
 })
           </code></pre>
       </li>
-      
+
     </ul>
-    
+
     <a name="flash_events"></a>
     <h2>HTML Attributes</h2>
     <p>
@@ -364,8 +364,9 @@
           player_2.flash_event(function(event){
               if(event.type == "mouseUp") {player_2.toggle();}});
         })
+        $("#player").bind("spdState.player", function(e,d){console.log(e,d)});
       </script>
-            
+
     <script type="text/javascript">
 
       var _gaq = _gaq || [];

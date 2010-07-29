@@ -7,7 +7,7 @@
     player_url  : "super_dumb_player.swf",
     create      : create,
     event       : function(id,event_name, data) {
-                    $("#"+id).trigger(event_name+"."+id, data)
+                    $("#"+id).trigger(event_name+"."+id, data);
                   }
   };
 

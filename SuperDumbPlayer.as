@@ -20,6 +20,9 @@ package {
   import flash.events.TimerEvent;
   import flash.events.MouseEvent;
   
+  // TODO alter the ContextMenu
+  //import flash.ui.ContextMenu;
+  
   public class SuperDumbPlayer extends Sprite {
 
     var player, 
