@@ -115,43 +115,54 @@
 		</style>
 	</head>
 	<body>
-
+    <div class="dumb_example">
+      <ul>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#usage">Basic Usage</a></li>
+        <li><a href="#custom">Custom Templates</a></li>
+        <li><a href="#api">API</a></li>
+        <li><a href="#instance_api">Instance API</a></li>
+        <li><a href="#flash_events">Flash Events</a></li>
+        <li><a href="#ui_flash_events">UI Flash Events</a></li>
+        <li><a href="#html_attributes">HTML Attributes</a></li>
+      </ul>
+    </div>
     <h1>Super Dumb Player</h1>
     <p>
-      <em>A Flash video player which has no Flash user interface, no error handling and no styled user interface.</em>
-    </p>
-    <p>
-      Get the source and what not at the <a href="http://github.com/jweir/Super-Dumb-Player/"> Github</a> page.
-    <p>
-      <b>Requirements</b>
-        <a href="http://jquery.com/">jQuery</a>,
-        <a href="http://jqueryui.com/">jQuery UI with Draggable</a> and
-        <a href="code.google.com/p/swfobject">swfobject</a>.
+      <b>A Flash video player which uses a pure HTML user interface.</b>
     </p>
     <p>
       Copyright 2010 by <a href="http://github.com/jweir">John Weir</a>
       licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT license.</a>
     </p>
-    <h2>What it is</h2>
+    
     <p>
-      From time to time I need to play video and need to get a Flash video player.  But they all are a pain to skin.
-      So I decided to make one which has the entire user interface created in HTML.
+      <b>Source Code:</b> <a href="http://github.com/jweir/Super-Dumb-Player"> Github</a>
+      | <a href="test/index.html"> run the tests set</a>
+    <p>
+      <b>Requires</b>
+      <a href="http://jquery.com/">jQuery</a>,
+      <a href="http://jqueryui.com/">jQuery UI with Draggable</a> and
+      <a href="code.google.com/p/swfobject">swfobject</a>.
+    </p>
+    <h2>Installation</h2>
+    <p>
+      <a href="super_dumb_player.zip">Download the files</a> and place them in your javascript directory.
     </p>
     <p>
-      There is no default look.  You need to supply your own CSS.  The player is kept very simple and very lightweight.
-      It doesn't hold your hand, but you shouldn't need to hold its hand.  Just give a little push and be done with it.
-    </p>
-
-    <h2>Unfeatures</h2>
-    <p>
-      Supports more than one video/player at a time.
-      Probably only works with progressive video.
-      "Tested" in IE 7, Safari, Chrome and Firefox 3.5, but not heavily yet.
-      Doesn't show a buffering state.
-    </p>
-
-    <p>
-      To listen for Flash events see <a href="#flash_events">Flash Events</a>
+      You will need to include the following script source files:
+      <code><blockquote>
+        &lt;script type=&quot;text/javascript&quot; src=&quot;vendor/swfobject.js&quot;&gt;&lt;/script&gt;<br/>
+        &lt;script type=&quot;text/javascript&quot; src=&quot;vendor/jquery-1.4.2.min.js&quot;&gt;&lt;/script&gt;<br/>
+        &lt;script type=&quot;text/javascript&quot; src=&quot;super_dumb_player.js&quot;&gt;&lt;/script&gt;<br/>
+        &lt;script type=&quot;text/javascript&quot; src=&quot;vendor/jquery-ui-1.8.custom.min.js&quot;&gt;&lt;/script&gt;<br/>
+        &lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;<br/>
+          <blockquote>
+          // Update the path the swf file if you need too<br/>
+          dumb_player.player_url = &quot;/super_dumb_player.swf&quot;;
+          </blockquote>
+        &lt;/script&gt;<br/>
+      </blockquote></code>
     </p>
 
     <div class="dumb_example">
@@ -203,8 +214,8 @@
   })
 &lt;/script&gt;
     </pre></code>
-
-    <h2>Custom Templates &amp; Using Canvas</h2>
+    <a name="custom"></a>
+    <h2>Custom Templates</h2>
     <p>
       The player has a built in HTML interface template, but no CSS style. So create some CSS to give the UI a useable look.
       Each element in the UI uses a specific class name, see below.
@@ -240,7 +251,7 @@
     <p>
       <b>It is possible to use a graphics library, like Raphael, to really customize the look.</b>
     </p>
-
+    <a name="api"></a>
     <h2>API</h2>
     <ul class="api">
       <li><h3>dumb_player.player_source</h3>
@@ -270,43 +281,83 @@
       </li>
     </ul>
 
+    <a name="player_api"></a>
     <h2>Instance API</h2>
     <ul class="api">
       <li>
-        <h3>instance.buffer_time(n) <span class="returns">&rArr; stream.bufferTime</span></h3>
+        <h3>player.buffer_time(n) <span class="returns">&rArr; stream.bufferTime</span></h3>
         Set or get the number of seconds to buffer the video before playing. This can also be set via the <code>spd_buffer_time</code> attribute in the video source element.
         <em>The default value is 1 second.</em>
       </li>
       <li>
-        <h3>instance.load(src) <span class="returns">&rArr; instance</span></h3>
+        <h3>player.load(src) <span class="returns">&rArr; player</span></h3>
         Load a new movie and start playing it
       </li>
       <li>
-        <h3>instance.pause() <span class="returns">&rArr; instance</span></h3>
+        <h3>player.pause() <span class="returns">&rArr; player</span></h3>
       </li>
       <li>
-        <h3>instance.play() <span class="returns">&rArr; instance</span></h3>
+        <h3>player.play() <span class="returns">&rArr; player</span></h3>
         Play the movie, if it is paused.
       </li>
       <li>
-        <h3>instance.player() <span class="returns">&rArr; the object/embed element</span> </h3>
+        <h3>player.player() <span class="returns">&rArr; the object/embed element</span> </h3>
         Return the object or emended element containing the Flash player.
       </li>
       <li>
-        <h3>instance.remove()</h3>
+        <h3>player.remove()</h3>
         Remove the player and replace it with the original content.
       </li>
       <li>
-        <h3>instance.toggle() <span class="returns">&rArr; instance</span></h3>
+        <h3>player.toggle() <span class="returns">&rArr; player</span></h3>
         Toggle play/pause.
       </li>
       <li>
-        <h3>instance.toggle_volume() <span class="returns">&rArr; instance</span></h3>
+        <h3>player.toggle_volume() <span class="returns">&rArr; player</span></h3>
         Toggle volume on or off.
       </li>
     </ul>
     <a name="flash_events"></a>
     <h2>Flash Events</h2>
+    <p>
+      You can bind a parent of the player to listen for <b>sdpState</b> and <b>sdpStatus</b> events.
+    </p>
+    <ul class='api'>
+      <li>
+        <h3>sdpState <span  class="returns"> true | false</span></h3>
+        Triggered when the movie is played or paused
+      </li>
+      <li>
+        <h3>sdpUpdate <span  class="returns"> object</span></h3>
+        Triggered as the movie plays.
+        <pre><code>
+  time      : stream.time
+  duration  : metaDataStore.duration
+  percentage: stream.time/metaDataStore.duration * 100
+  loaded    : stream.bytesLoaded/stream.bytesTotal
+        </code></pre>
+      </li>
+    </ul>
+    <p>
+      <b>Examples</b>
+    </p>
+      Alert when the player is paused
+      <pre><code>$("body").bind("sdpState", function(event, state){
+  if(state == false){ alert("the player is paused")}
+});
+      </code></pre>
+    </p>
+    
+    </p>
+      If you have more than two movies you can specify the movie's DOM <em>id</em> in the binding.
+      <pre><code>$("body").bind("sdpState.PLAYER_ID", function(event, state){
+  if(state == false){ alert("the player is paused")}
+});
+      </code></pre>
+    </p>
+    
+    <a name="ui_flash_events"></a>
+    <h2>UI Flash Events</h2>
     <p>
       The following Flash events are captured:
       <b>MOUSE_DOWN, MOUSE_MOVE, MOUSE_OUT, MOUSE_OVER, MOUSE_UP, MOUSE_WHEEL</b>
@@ -316,7 +367,7 @@
     </p>
     <ul class='api'>
       <li>
-        <h3>instance.flash_event(func) <span class="returns">&rArr; instance</span></h3>
+        <h3>player.flash_event(func) <span class="returns">&rArr; player</span></h3>
         Use this method to capture mouse events which occur in the Flash Player.
         <p>
           <code>func</code> is a function which takes one argument, an object which has all the properties of
@@ -324,9 +375,9 @@
         </p>
         <p>
           <b>For example</b>, to toggle pause/play in a movie with a mouse click:
-          <pre><code>instance.flash_event(function(event){
+          <pre><code>player.flash_event(function(event){
   if(event.type == "mouseUp") {
-    instance.toggle();
+    player.toggle();
   }
 })
           </code></pre>
@@ -334,7 +385,7 @@
 
     </ul>
 
-    <a name="flash_events"></a>
+    <a name="html_attributes"></a>
     <h2>HTML Attributes</h2>
     <p>
       The player source element can have the following attributes to overwrite the defaults.
