@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Super Dump Player Test</title>
+	<meta name="author" content="John Weir">
+  <script type="text/javascript" src="../vendor/swfobject.js"></script>
+	<script type="text/javascript" src="../vendor/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="../super_dumb_player.js"></script>
+	<script type="text/javascript" src="../vendor/jquery-ui-1.8.custom.min.js"></script>
+	
+	<script type="text/javascript" charset="utf-8" src="syn.js"></script>
+	<script type="text/javascript" charset="utf-8" src="qunit.js"></script>
+	<script type="text/javascript" charset="utf-8" src="super_dumb_player_test.js"></script>
+	
+	<link rel="stylesheet" href="qunit.css" type="text/css" media="screen" charset="utf-8"/>
+	<style type="text/css" media="screen">
+	 .duration, .time, .state, .volume {
+     margin: 2px;
+     font-size:10px;
+     padding:2px;
+     background: #666;
+     color:#FFF;
+     position:relative;
+     float:left;
+     width:40px;
+     text-align:center;
+   }
+
+   .dumb_player_ui {
+     height:30px;
+   }
+
+	  .scrubber {
+	    position:relative;
+	  }
+	  .scrubber .indicator {
+	    display:block;
+	  }
+	  .scrubber .thumb {cursor:pointer; position:absolute; left:0px; top:0px; height:10px; width:10px; background:#000; z-Index:99;}
+	  .scrubber .track {position:relative; height:10px; width:270px; background:#999; z-Index:1}
+	  .scrubber .buffer {position:absolute; left:0px; top:0px; height:10px; width:0px; background:#CCC; z-Index:50}
+   
+	</style>
+</head>
+<body>
+  <h1 id="qunit-header">QUnit example</h1>
+  <h2 id="qunit-banner"></h2>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+  
+  <div id="qunit-fixture" style="display:block; position:relative; left:0; top:0">
+    <div id="test_player_parent">
+      <div id='test_player'>
+        <img src='../assets/still_from_video.png'/>
+      </div>
+    </div>
+  </div>
+  
+</body>
+</html>
