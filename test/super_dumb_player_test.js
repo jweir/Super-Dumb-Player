@@ -189,7 +189,7 @@ module("Player UI", {
     var completed = function(){
       setTimeout(function(){
         var time = parseFloat($(".time").text());
-        ok(time > 0.4, "time is updated : "+time);
+        ok(time > 0, "time is updated : "+time);
         start();
       }, 1500)
     }
