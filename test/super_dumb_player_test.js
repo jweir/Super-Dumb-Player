@@ -184,22 +184,29 @@ module("Player UI", {
 
   test("dragging the the scrubber seeks the movie", function(){
     expect(2);
-    stop(default_load_time)
-    var thumb = $(".thumb");
-    var completed = function(){
+    stop(default_load_time);
+
+    var thumb = $(".thumb"),
+        time;
+
+    var test_drag = function(){
+      time = parseFloat($(".time").text());
+      ok(time > 0)
       setTimeout(function(){
-        var time = parseFloat($(".time").text());
-        ok(time > 0, "time is updated : "+time);
+        var current_time = parseFloat($(".time").text());
+        ok(current_time > time, "time is updated : "+time+" "+current_time);
         start();
-      }, 1500)
+      }, 500)
     }
 
     after_movie_loads(function(){
-      ok(parseFloat($(".time").text()) == 0, "time is zero");
-      Syn.drag({
+      Syn
+      .click($(".state")) // pause the movie
+      .delay(1000) // let the movie load a bit
+      .drag({
         from: {clientX:thumb.offset().left, clientY:thumb.offset().top},
         to : {clientX:thumb.offset().left+200, clientY:thumb.offset().top}
-      }, thumb, completed)
+      }, thumb, test_drag)
     })
   })
 
