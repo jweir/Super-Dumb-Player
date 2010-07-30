@@ -191,7 +191,7 @@ module("Player UI", {
         var time = parseFloat($(".time").text());
         ok(time > 0.4, "time is updated : "+time);
         start();
-      }, 500)
+      }, 1500)
     }
 
     after_movie_loads(function(){
