@@ -138,18 +138,19 @@ module("Player UI", {
   test("adusting the volume sends an event with the current volume level", function(){
     stop(1000)
     var counter = 0,
-        results = [0.7, 0, 1];
+        results = [[0.7, "on"], [0, "off"], [1, "on"]];
 
-    expect(3);
+    expect(6);
     after_movie_loads(function(){
        $("body").bind("sdpVolume(test_player)", function(event, data){
-         equal(results[counter], data, "volume set correctly");
+         equal(results[counter][0], data, "volume set correctly");
+         ok($(".volume").find("."+results[counter][1]).is(":visible"));
          counter++;
          if(counter == 3){ start()} else {
-           test_player.volume(results[counter]);
+           test_player.volume(results[counter][0]);
          }
         });
-      test_player.volume(results[0]);
+      test_player.volume(results[0][0]);
     })
   })
 
