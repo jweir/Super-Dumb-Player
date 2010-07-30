@@ -1,80 +1,112 @@
 // Hi!
 // Copyright 2010 by John Weir, john@famedriver.com
-// Licensed under the MIT license. (feel free to use this)
+// Licensed under the MIT license.
 (function(){
 
   window.dumb_player = {
     player_url  : "super_dumb_player.swf",
     create      : create,
     event       : function(id,event_name, data) {
-                    $("#"+id).trigger(event_name+"."+id, data);
+                    $("#"+id).trigger(event_name, data);
+                    $("#"+id).trigger(event_name+"("+id+")", data);
                   }
   };
 
-  $(document).ready(function(){
-    $("a.super_dumb_player").click(function(){
-      create(this, this.href);
-      return false;
-    })
-  })
-
-  // TODO document  auto play, bufferTime
   function parse_attributes(element){
     return {
-      target_id : element.attr("id"),
-      volume: element.attr("sdp_volume"),
-      auto_play: element.attr("sdp_auto_play"), // on(default), off
-      stage_scale_mode: element.attr("sdp_stage_scale_mode"), // on(default), off
-      width: element.css("width"),
-      height: element.css("height"),
-      buffer_time: element.attr("sdp_buffer_time")
+      target_id        : element.attr("id"),
+      volume           : element.attr("sdp_volume"),
+      auto_play        : element.attr("sdp_auto_play"), // on(default), off
+      stage_scale_mode : element.attr("sdp_stage_scale_mode"), // on(default), off
+      width            : element.css("width"),
+      height           : element.css("height"),
+      buffer_time      : element.attr("sdp_buffer_time")
     }
+  }
+
+  function bind_events(player){
+    var id = player.id;
+
+    $("#"+id).parent().bind("sdpPlay."+id, player.play)
+      .bind("sdpPause."+id, player.pause)
+      .bind("sdpSeek."+id, function(e,d){player.seek(d)})
+      .bind("sdpToggle."+id, player.toggle)
+      .bind("sdpToggleVolume."+id, player.toggle_volume)
+      .bind("sdpFlashLoaded."+id, function(){ player.load(player.src).volume(); return player;});
   }
 
 
   function create(element, file_src){
-    var element     = $(element),
-        id          = element.attr("id"), //REDUNDANT
-        flashvars   = parse_attributes(element),
-        params      = {allowScriptAccess: "always", allowFullScreen:"true"},
-        attributes  = {},
-        obj         = $("#"+id),
-        player      = function() {return $("#"+id)[0]},
+    var element        = $(element),
+        id             = element.attr("id"), //REDUNDANT
+        flashvars      = parse_attributes(element),
+        params         = {allowScriptAccess: "always", allowFullScreen:"true"},
+        attributes     = {},
+        obj            = $("#"+id),
+        player         = function() {return $("#"+id)[0]},
         original_state = obj.clone(true),
-        src         = file_src;
+        src            = file_src;
 
     dumb_player.ui.create(obj);
 
     var self = {
-        player : function(){ return player()},
-        play   : function(){ player().dumb_resume(); return self},
-        pause  : function(){ player().dumb_pause(); return self},
-        seek   : function(time){ player().dumb_seek(time); return self},
-        volume : function(value){ return player().dumb_volume(value) },
-        load   : function(src){ player().dumb_play(src); return self},
-        remove : function(){ $(player()).replaceWith(original_state);},
-        toggle : function(){ player().dumb_togglePlayPause(); return self;},
-        buffer_time :function(n) {return player().dumb_bufferTime(n);},
-        resize : function(w,h){
-          $(player()).css({width:w, height:h}).attr({width:w, height:h}); return self;
-
-        },
-        flash_event: function(func){
-          $("#"+id).parent().bind("sdpFlashEvent."+id, function(_, flashEvent){func(flashEvent);});
-          return self;
-        },
-        toggle_volume : function() {
-          (player().dumb_volume() > 0) ? player().dumb_volume(0) : player().dumb_volume(0.8);
-          return self;
-        }
+      src : src,
+      id : id,
+      player: function() {
+      	return player()
+      },
+      play: function() {
+      	player().dumb_resume();
+      	return self
+      },
+      pause: function() {
+      	player().dumb_pause();
+      	return self
+      },
+      seek: function(time) {
+      	player().dumb_seek(time);
+      	return self
+      },
+      volume: function(value) {
+      	return player().dumb_volume(value)
+      },
+      load: function(src) {
+      	player().dumb_play(src);
+      	return self
+      },
+      remove: function() {
+      	$(player()).replaceWith(original_state);
+      },
+      toggle: function() {
+      	player().dumb_togglePlayPause();
+      	return self;
+      },
+      buffer_time: function(n) {
+      	return player().dumb_bufferTime(n);
+      },
+      resize: function(w, h) {
+      	$(player()).css({
+      		width: w,
+      		height: h
+      	}).attr({
+      		width: w,
+      		height: h
+      	});
+      	return self;
+      },
+      flash_event: function(func) {
+      	$("#" + id).parent().bind("sdpFlashEvent." + id, function(_, flashEvent) {
+      		func(flashEvent);
+      	});
+      	return self;
+      },
+      toggle_volume: function() {
+      	(player().dumb_volume() > 0) ? player().dumb_volume(0) : player().dumb_volume(0.8);
+      	return self;
+      }
     }
 
-    $("#"+id).parent().bind("sdpPlay."+id, self.play)
-      .bind("sdpPause."+id, self.pause)
-      .bind("sdpSeek."+id, function(e,d){self.seek(d)})
-      .bind("sdpToggle."+id, self.toggle)
-      .bind("sdpToggleVolume."+id, self.toggle_volume)
-      .bind("sdpFlashLoaded."+id, function(){ self.load(src).volume(); return self;});
+    bind_events(self);
 
     swfobject.embedSWF(
         dumb_player.player_url,
@@ -112,8 +144,8 @@
         <span class='on'>Mute</span>\
         <span class='off'>Unmute</span>\
       </button>\
-      <span class='duration'/>\
       <span class='time'/>\
+      <span class='duration'/>\
     </div>");
 
   function template(obj_or_html){
@@ -175,7 +207,7 @@
 
     thumb.draggable({
         start: function(){
-          is_dragging = true;
+          is_dragging       = true;
           before_drag_state = player_state;
           dumb_player.event(id, "sdpPause")
         },
@@ -187,14 +219,14 @@
           if(before_drag_state) dumb_player.event(id, "sdpPlay");
         },
         containment: buffer,
-        scroll: false
+        scroll     : false
     });
 
     container.bind("sdpState."+id, function(e,s){player_state = s;})
 
     container.bind("sdpUpdate."+id, function(event, info){
-      time.text(dumb_player.ui.time_formater()(info.duration));
-      duration.text(dumb_player.ui.time_formater()(info.time));
+      time.text(dumb_player.ui.time_formater()(info.time));
+      duration.text(dumb_player.ui.time_formater()(info.duration));
       buffer.css("width", info.loaded * track.width());
       if(!is_dragging){
         thumb.css("left", (info.percentage/100) * (track.width()-thumb.width()))
