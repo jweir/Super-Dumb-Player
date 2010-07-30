@@ -15,7 +15,8 @@ function after_movie_loads(callback, times_to_call){
 
 
 dumb_player.player_url  = "../super_dumb_player.swf";
-var test_player;
+var test_player,
+    default_load_time = 10000;
 
 /////////////////////////////////////////////////////////////////////////////////
 module("Player skin", {
@@ -47,14 +48,14 @@ module("Events", {
 });
 
   test("are bound to EVENT_NAME", function(){
-    stop(1000);
+    stop(default_load_time);
     $("body").bind("sdpFlashLoaded", function(e){
       start();
       equal(e.target, test_player.player()) });
   })
 
   test("are bound to EVENT_NAME(PLAYER_ID), where id is the player's DOM id", function(){
-    stop(1000);
+    stop(default_load_time);
     $("body").bind("sdpFlashLoaded(test_player)", function(){ start(); ok(true) });
   })
 
@@ -71,7 +72,7 @@ module("Loading the video file", {
 
   test("duration is set by the length of the loaded movie", function(){
     expect(1);
-    stop(1000);
+    stop(default_load_time);
     after_movie_loads(function(){
       equal(24, parseInt($(".duration").text()), "duration should be 24");
       start();
@@ -79,12 +80,12 @@ module("Loading the video file", {
   })
 
   test("sdpFlashLoaded(PLAYER_ID) is triggered when the movie is loaded", function(){
-    stop(1000);
+    stop(default_load_time);
     $("body").bind("sdpFlashLoaded(test_player)", function(){  start(); ok(true) });
   });
 
   test("sdpState(PLAYER_ID) is triggered with 'true' the movie has started or is playing", function(){
-    stop(1000);
+    stop(default_load_time);
     expect(1);
     $("body").bind("sdpState.test_player", function(event, data){
       if(data == true){
@@ -95,7 +96,7 @@ module("Loading the video file", {
   });
 
   test("sdpUpdate(PLAYER_ID) is triggered when the movie is playing; sends time based data", function(){
-    stop(1000);
+    stop(default_load_time);
     expect(4);
     $("body").bind("sdpUpdate(test_player)", function(event, data){
       start();
@@ -119,7 +120,7 @@ module("Player UI", {
 
   test("clicking the volume button toggles mute/umute", function(){
     expect(3);
-    stop(10000);
+    stop(default_load_time);
 
     after_movie_loads(function(){
       var button = $(".volume");
@@ -136,7 +137,7 @@ module("Player UI", {
   });
 
   test("adusting the volume sends an event with the current volume level", function(){
-    stop(1000)
+    stop(default_load_time)
     var counter = 0,
         results = [[0.7, "on"], [0, "off"], [1, "on"]];
 
@@ -156,7 +157,7 @@ module("Player UI", {
 
   test("clicking play button toggles play/pause", function(){
     expect(5);
-    stop(10000);
+    stop(default_load_time);
     var time = 0;
 
     after_movie_loads(function(){
@@ -182,7 +183,7 @@ module("Player UI", {
 
   test("dragging the the scrubber seeks the movie", function(){
     expect(2);
-    stop(2000)
+    stop(default_load_time)
     var thumb = $(".thumb");
     var completed = function(){
       setTimeout(function(){
