@@ -16,7 +16,7 @@
     return {
       target_id        : element.attr("id"),
       volume           : element.attr("sdp_volume"),
-      auto_play        : element.attr("sdp_auto_play"), // on(default), off
+      auto_play        : element.attr("sdp_auto_play"),        // on(default), off
       stage_scale_mode : element.attr("sdp_stage_scale_mode"), // on(default), off
       width            : element.css("width"),
       height           : element.css("height"),
@@ -24,15 +24,21 @@
     }
   }
 
+  function loaded(player){
+    $(player.player()).css("visibility", "visible");
+    return player.load(player.src).volume();
+  }
+
   function bind_events(player){
     var id = player.id;
 
-    $("#"+id).parent().bind("sdpPlay."+id, player.play)
-      .bind("sdpPause."+id, player.pause)
-      .bind("sdpSeek."+id, function(e,d){player.seek(d)})
-      .bind("sdpToggle."+id, player.toggle)
+    $("#"+id).parent()
+      .bind("sdpPlay."        +id, player.play)
+      .bind("sdpPause."       +id, player.pause)
+      .bind("sdpSeek."        +id, function(e,d){player.seek(d)})
+      .bind("sdpToggle."      +id, player.toggle)
       .bind("sdpToggleVolume."+id, player.toggle_volume)
-      .bind("sdpFlashLoaded."+id, function(){ player.load(player.src).volume(); return player;});
+      .bind("sdpFlashLoaded." +id, function(){ loaded(player);})
   }
 
 
@@ -51,7 +57,7 @@
 
     var self = {
       src : src,
-      id : id,
+      id  : id,
       player: function() {
       	return player()
       },
@@ -115,6 +121,7 @@
         obj.css("height"),
         "9.0.0", null, flashvars, params, attributes);
 
+    $(player()).css("visibility", "hidden");
     return self;
   }
 })();
