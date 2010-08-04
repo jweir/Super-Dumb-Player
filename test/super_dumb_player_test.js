@@ -53,9 +53,7 @@ $(document).ready(function() {
 
     test("creates the flash movie object element",
     function() {
-        ok(test_player.player)
-        equal(test_player.player().nodeName, "OBJECT")
-        equal(test_player.player(), $("#test_player")[0])
+        equal($(test_player.player())[0].nodeName, "OBJECT")
     });
 
     test("creates the player ui elements",
@@ -283,6 +281,15 @@ $(document).ready(function() {
             thumb, test_drag)
         })
     })
+
+    /////////////////////////////////////////////////////////////////////////////////
+    module("Utilities")
+
+    test(".unique_id generates a unique id",
+    function(){
+      ok($.uniqueId() != $.uniqueId(), "generates an id like : "+$.uniqueId());
+    });
+
 
 
 

@@ -41,7 +41,6 @@
       .bind("sdpFlashLoaded." +id, function(){ loaded(player);})
   }
 
-
   function create(element, file_src){
     var element        = $(element),
         id             = element.attr("id"), //REDUNDANT
@@ -113,10 +112,9 @@
     }
 
     bind_events(self);
-
     swfobject.embedSWF(
         dumb_player.player_url,
-        id,
+        id, // TODO make a uniqe id
         obj.css("width"),
         obj.css("height"),
         "9.0.0", null, flashvars, params, attributes);
@@ -124,6 +122,22 @@
     $(player()).css("visibility", "hidden");
     return self;
   }
+})();
+
+(function(){
+  // jQuery extensions
+  jQuery.fn.video = function(src){
+    return this.each(function(){
+      dumb_player.create(this, src);
+    });
+  }
+
+  var counter = 0;
+
+  jQuery.uniqueId = function(){
+    return ["spd", (new Date()).getTime(), (counter += 1)].join("-")
+  }
+
 })();
 
 (function(){
