@@ -9,7 +9,7 @@ $(document).ready(function() {
         var called = 0;
         times_to_call = times_to_call || 1;
 
-        $("body").bind("sdpUpdate.test_player",
+        $("body").bind("sdpUpdate(test_player)",
         function(event, data) {
             if (called < times_to_call) {
                 called = called + 1;
@@ -18,51 +18,57 @@ $(document).ready(function() {
         })
     }
 
+    function create_player() {
+        test_player = dumb_player.create("#test_player", './assets/dumb_example.m4v');
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
-    module("Player skin", {
-        setup: function() {
-            test_player = dumb_player.create("#test_player", './assets/dumb_example.m4v');
-        },
-        teardown: function() {
-            $("body").unbind();
-        }
-    });
+    (function() {
 
-    test("flash object is hidden at creation",
-    function() {
-        expect(2);
-        stop(default_load_time);
-        equal("hidden", $(test_player.player()).css("visibility"), "flash movie is hidden");
-        after_movie_loads(function() {
-            equal("visible", $(test_player.player()).css("visibility"), "flash movie is visible");
-            start();
+        var container;
+
+        module("Setup", {
+            setup: function(){
+                container = $("#test_player");
+                create_player();
+            },
+            teardown: function() {
+                $("body").unbind();
+            }
+        });
+
+        test("injects flash into the container HTML", function() {
+            ok(container.find("object")[0])
+        });
+
+        test("sets the flash size to match the container's size", function() {
+            equal(270, container.find("object").width())
+            equal(360, container.find("object").height())
+        });
+
+        test("injects the UI into the container HTML", function(){
+            ok(container.find(".dumb_player_ui")[0])
+        });
+
+        test("player() returns the flash object", function(){
+            equal($("object")[0], test_player.player())
         })
-    });
 
-    test("flash object is visible after the video file loads",
-    function() {
-        expect(2);
-        stop(default_load_time);
-        after_movie_loads(function() {
-            equal("visible", $(test_player.player()).css("visibility"), "flash movie is visible");
-            ok($(test_player.player()).is(":visible"), "flash movie is visible");
-            start();
-        })
-    });
+        test("flash object is hidden at creation", function() {
+            equal("hidden", $(test_player.player()).css("visibility"), "flash movie is hidden");
+        });
+
+        test("flash object is visible after the video file loads", function() {
+            stop(default_load_time);
+            expect(1);
+            after_movie_loads(function() {
+                equal("visible", $(test_player.player()).css("visibility"), "flash movie is visible");
+                start();
+            })
+        });
 
 
-    test("creates the flash movie object element",
-    function() {
-        equal($(test_player.player())[0].nodeName, "OBJECT")
-    });
-
-    test("creates the player ui elements",
-    function() {
-        $.each(["scrubber", "state", "duration", "volume", "time"],
-        function(i, label) {
-            ok($(".dumb_player_ui ." + label)[0], label + " exists");
-        })
-    })
+    })();
 
     /////////////////////////////////////////////////////////////////////////////////
     module("Events", {
@@ -80,7 +86,7 @@ $(document).ready(function() {
         $("body").bind("sdpFlashLoaded",
         function(e) {
             start();
-            equal(e.target, test_player.player())
+            equal(e.target, $("#test_player")[0])
         });
     })
 
@@ -129,7 +135,7 @@ $(document).ready(function() {
     function() {
         stop(default_load_time);
         expect(1);
-        $("body").bind("sdpState.test_player",
+        $("body").bind("sdpState(test_player)",
         function(event, data) {
             if (data == true) {
                 start();
@@ -223,8 +229,7 @@ $(document).ready(function() {
             button,
             function() {
                 ok(button.find('.pause').is(":visible"), "button is in correct state");
-                time = parseFloat($(".time").text());
-                ok(time >= 0, "time set")
+                ok(parseFloat($(".time").text()) >= 0, "time is set set")
             })
             .click({},
             button,
@@ -259,14 +264,13 @@ $(document).ready(function() {
                 ok(current_time > time, "time is updated : " + time + " " + current_time);
                 start();
             },
-            500)
+            1500)
         }
 
         after_movie_loads(function() {
             Syn
             .click($(".state"))
-            // pause the movie
-            .delay(1000)
+            .delay(500)
             // let the movie load a bit
             .drag({
                 from: {
@@ -283,11 +287,60 @@ $(document).ready(function() {
     })
 
     /////////////////////////////////////////////////////////////////////////////////
+    module("jQuery plugin", {
+        setup: function() {
+            $("#test_player").video('./assets/dumb_example.m4v');
+        },
+        teardown: function() {
+            $("body").unbind();
+        }
+    });
+
+    function listen_for(event_name) {
+        stop(default_load_time);
+        $("body").bind(event_name,
+        function(event, data) {
+            ok(true, event_name + "was triggered");
+            start();
+        });
+    }
+
+    test("creates a flash object",
+    function() {
+        ok($("object")[0]);
+    });
+
+    test("stores the player in jQuery data",
+    function() {
+        ok($.data($("object").parent()[0], "super_dumb_player"));
+    });
+
+
+    $.each({
+        volume: ["sdpVolume", 0.5],
+        seek: ["sdpSeek", 5]
+    },
+    function(m, e) {
+        test("responds to " + m,
+        function() {
+            expect(1);
+            listen_for(e[0] + "(test_player)");
+            $("#test_player")[m](e[1]);
+        })
+    })
+
+    test("creates an id for an element without one",
+    function() {
+        ok(false)
+    });
+
+
+    /////////////////////////////////////////////////////////////////////////////////
     module("Utilities")
 
     test(".unique_id generates a unique id",
-    function(){
-      ok($.uniqueId() != $.uniqueId(), "generates an id like : "+$.uniqueId());
+    function() {
+        ok($.uniqueId() != $.uniqueId(), "generates an id like : " + $.uniqueId());
     });
 
 
