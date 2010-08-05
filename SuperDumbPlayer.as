@@ -169,9 +169,9 @@ package {
     function status(){
       return {
           bufferLength : stream.bufferLength,
-           bufferTime : stream.bufferTime,
-           bytesLoaded :stream.bytesLoaded,
-           bytesTotal : stream.bytesTotal
+          bufferTime   : stream.bufferTime,
+          bytesLoaded  : stream.bytesLoaded,
+          bytesTotal   : stream.bytesTotal
       }
     }
 

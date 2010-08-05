@@ -100,6 +100,20 @@ $(document).ready(function() {
         });
     })
 
+    test("time, duration, percentage, loaded is available via the player.status property", function(){
+        stop(default_load_time);
+        expect(4)
+        after_movie_loads(function(){
+            setTimeout(function(){
+                ok(0 <= test_player.status.time, "time");
+                ok(0 <= test_player.status.duration, "duration");
+                ok(0 <= test_player.status.percentage, "percentage");
+                ok(0 <= test_player.status.loaded, "loaded");
+                start();
+            }, 200)
+        })
+    })
+
 
     /////////////////////////////////////////////////////////////////////////////////
     module("Loading the video file", {
@@ -219,7 +233,8 @@ $(document).ready(function() {
     function() {
         expect(5);
         stop(default_load_time);
-        var time = 0;
+        var time_before_play,
+            time_after_play;
 
         after_movie_loads(function() {
             var button = $(".state");
@@ -229,20 +244,20 @@ $(document).ready(function() {
             button,
             function() {
                 ok(button.find('.pause').is(":visible"), "button is in correct state");
-                ok(parseFloat($(".time").text()) >= 0, "time is set set")
+                ok(test_player.status.time >= 0, "time is set set")
             })
             .click({},
             button,
             function() {
-                time = parseFloat($(".time").text());
+                time_before_play = test_player.status.time;
                 ok(button.find('.play').is(":visible"), "final button state");
             })
             .delay(1100)
             .click({},
             button,
             function() {
-                var current_time = parseFloat($(".time").text());
-                ok(current_time >= time + 1, "time advanded: " + current_time);
+                time_after_play = test_player.status.time;
+                ok(time_after_play > time_before_play + 0.8, "time advanded: " + time_after_play);
                 start()
             })
         })
@@ -254,42 +269,39 @@ $(document).ready(function() {
         stop(default_load_time);
 
         var thumb = $(".thumb"),
-        time;
+            time_before_drag,
+            timer_after_drag;
 
         var test_drag = function() {
-            time = parseFloat($(".time").text());
-            ok(time > 0)
-            setTimeout(function() {
-                var current_time = parseFloat($(".time").text());
-                ok(current_time > time, "time is updated : " + time + " " + current_time);
-                start();
-            },
-            1500)
+            ok(time_before_drag >= 0)
+
+            timer_after_drag = test_player.status.time;
+            ok(timer_after_drag > time_before_drag, "time is updated : " + time_before_drag + " " + timer_after_drag);
+            start();
         }
 
         after_movie_loads(function() {
             Syn
             .click($(".state"))
-            .delay(500)
-            // let the movie load a bit
+            .delay(1000, function(){time_before_drag = test_player.status.time;}) // let the movie load a bit
             .drag({
                 from: {
                     clientX: thumb.offset().left,
                     clientY: thumb.offset().top
                 },
                 to: {
-                    clientX: thumb.offset().left + 200,
+                    clientX: thumb.offset().left + 250,
                     clientY: thumb.offset().top
-                }
-            },
-            thumb, test_drag)
+                },
+                duration: 1000
+            }, thumb, test_drag)
         })
     })
 
     /////////////////////////////////////////////////////////////////////////////////
     module("jQuery plugin", {
         setup: function() {
-            $("#test_player").video('./assets/dumb_example.m4v');
+            $("#test_player").superDumbPlayer('./assets/dumb_example.m4v');
         },
         teardown: function() {
             $("body").unbind();
@@ -297,7 +309,6 @@ $(document).ready(function() {
     });
 
     function listen_for(event_name) {
-        stop(default_load_time);
         $("body").bind(event_name,
         function(event, data) {
             ok(true, event_name + "was triggered");
@@ -312,26 +323,36 @@ $(document).ready(function() {
 
     test("stores the player in jQuery data",
     function() {
-        ok($.data($("object").parent()[0], "super_dumb_player"));
+        ok($.data($("#test_player")[0], "super_dumb_player"));
+        ok($.data($("#test_player")[0], "super_dumb_player").volume);
     });
 
 
     $.each({
         volume: ["sdpVolume", 0.5],
-        seek: ["sdpSeek", 5]
+        seek:   ["sdpUpdate", 5],
+        toggle: ["sdpUpdate"],
+        pause:  ["sdpUpdate"],
+        play:   ["sdpUpdate"]
+
     },
     function(m, e) {
         test("responds to " + m,
         function() {
             expect(1);
-            listen_for(e[0] + "(test_player)");
-            $("#test_player")[m](e[1]);
+            stop(default_load_time);
+            after_movie_loads(function(){
+                listen_for(e[0] + "(test_player)");
+                $("#test_player")[m](e[1]);
+            });
         })
     })
 
     test("creates an id for an element without one",
     function() {
-        ok(false)
+        equal("", $(".id_less_player").attr("id")+"")
+        $(".id_less_player").play('./assets/dumb_example.m4v')
+        ok($(".id_less_player").attr("id").length > 5)
     });
 
 

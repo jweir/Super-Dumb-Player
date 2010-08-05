@@ -116,7 +116,7 @@
 	</head>
 	<body>
     <div class="dumb_example">
-      <ul>
+      <ul id="toc">
         <li><a href="#installation">Installation</a></li>
         <li><a href="#usage">Basic Usage</a></li>
         <li><a href="#custom">Custom Templates</a></li>
@@ -166,16 +166,16 @@
     </p>
 
     <div class="dumb_example">
-      <b>Click the image for a dumb example</b>
       <div id='player'  style="width:270px; height:360px">
+        <b>Click the image for a dumb example</b>
         <img src='assets/still_from_video.png'/>
       </div>
 
       <script type="text/javascript">
         var player;
 
-        $("#player").click(function(){
-          player = dumb_player.create(this, 'assets/dumb_example.m4v');
+        $("#player img").click(function(){
+          player = dumb_player.create($("#player")[0], 'assets/dumb_example.m4v');
         })
       </script>
   	</div>

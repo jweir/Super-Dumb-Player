@@ -28,6 +28,9 @@
             player.seek(d)
         })
         .bind("sdpToggle("+id+")", player.toggle)
+        .bind("sdpUpdate("+id+")", function(e, d){
+            player.status = d;
+        })
         .bind("sdpToggleVolume("+id+")", player.toggle_volume)
         .bind("sdpFlashLoaded("+id+")",
         function() {
@@ -43,8 +46,12 @@
             original_state = container.clone(true),
             src = file_src;
 
+        if(element.id+"" == ""){
+            container.attr("id", $.uniqueId());
+        }
         var self = {
             src: src,
+            status : {},
             player: function() {
                 return player()
             },
@@ -161,31 +168,54 @@
     var data_key = "super_dumb_player";
 
     function get_player(el) {
-        return $.data($(el).parent()[0], data_key);
+        return $.data(el, "super_dumb_player");
     }
 
-    jQuery.fn.video = function(src) {
+    jQuery.fn.superDumbPlayer = function(src) {
         return this.each(function() {
             var e = dumb_player.create(this, src);
-            $.data($(e.player()).parent()[0], data_key, e);
+            $.data(this, data_key, e);
         });
     }
 
-    jQuery.fn.volume = function(v) {
-        return this.each(function() {
-            if (get_player(this)) {
-                get_player(this).volume(v);
-            }
-        });
-    }
+    var functions_with_args_map = [
+        "volume",
+        "seek",
+        "load",
+        "resize",
+        "flash_event",
+    ];
 
-    jQuery.fn.seek = function(time) {
-        return this.each(function() {
-            if (get_player(this)) {
-                get_player(this).seek(time);
-            }
-        });
-    }
+    var functions_without_args_map = [
+        "play",
+        "pause",
+        "toggle"
+    ];
+
+    //buffer_time and info
+
+    $.each(functions_with_args_map, function(i, func){
+        jQuery.fn[func] = function() {
+            return this.each(function() {
+                var player = get_player(this);
+                if (player) {
+                    player[func].apply(player, arguments);
+                }
+            });
+        }
+    });
+
+    $.each(functions_without_args_map, function(i, func){
+        jQuery.fn[func] = function() {
+            return this.each(function() {
+                var player = get_player(this);
+                if (player) {
+                    player[func]();
+                }
+            });
+        }
+    });
+
 
     var counter = 0;
 
