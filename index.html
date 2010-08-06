@@ -135,7 +135,7 @@
       Copyright 2010 by <a href="http://github.com/jweir">John Weir</a>
       licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT license.</a>
     </p>
-    
+
     <p>
       <b>Source Code:</b> <a href="http://github.com/jweir/Super-Dumb-Player"> Github</a>
       | <a href="test/index.html"> run the tests set</a>
@@ -175,7 +175,7 @@
         var player;
 
         $("#player img").click(function(){
-          player = dumb_player.create($("#player")[0], 'assets/dumb_example.m4v');
+          $("#player").superDumbPlayer('assets/dumb_example.m4v');
         })
       </script>
   	</div>
@@ -183,7 +183,7 @@
 
     <h2>Basic Usage</h2>
     <p>1. Create an element to contain your video.
-        It must have a unique <b>id</b>. it should include <b>height</b>
+        It should include <b>height</b>
         and <b>width</b> styles or other be the dimensions you want the player to be. This element and its contents will be
         replaced by the flash movie.
     </p>
@@ -195,12 +195,13 @@
     <p>2. Create the player. Call <code>create</code> with the target element and the url to the video.</p>
     <p>
       <code>
-        vp = dumb_player.create($("#unique_id"), "video_file_path.m4v");
+        $("#unique_id").superDumbPlayer("video_file_path.m4v");
       </code>
     </p>
 
     <b>For Example</b>
-    <code><pre>
+    <code><pre id="dumb_example_code">
+
 
 &lt;div id=&#x27;player&#x27;&gt;
   &lt;img src=&#x27;assets/still_from_video.png&#x27;/&gt;
@@ -209,8 +210,8 @@
 &lt;script type=&quot;text/javascript&quot;&gt;
   var player;
 
-  $(&quot;#player&quot;).click(function(){
-    player = dumb_player.create(this, &#x27;assets/dumb_example.m4v&#x27;);
+  $(&quot;#player img&quot;).click(function(){
+     $("#player").superDumbPlayer('assets/dumb_example.m4v');
   })
 &lt;/script&gt;
     </pre></code>
@@ -347,7 +348,7 @@
 });
       </code></pre>
     </p>
-    
+
     </p>
       If you have more than two movies you can specify the movie's DOM <em>id</em> in the binding.
       <pre><code>$("body").bind("sdpState.PLAYER_ID", function(event, state){
@@ -355,7 +356,7 @@
 });
       </code></pre>
     </p>
-    
+
     <a name="ui_flash_events"></a>
     <h2>UI Flash Events</h2>
     <p>

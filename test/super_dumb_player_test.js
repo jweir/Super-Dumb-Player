@@ -264,13 +264,16 @@ $(document).ready(function() {
         function() {
             stop(default_load_time);
             expect(4);
+            var count = 0;
             $("body").bind("sdpUpdate(test_player)",
             function(event, data) {
-                start();
-                equal(parseInt(data.duration), 24, "duration")
-                equal(parseInt(data.time), 0, "time")
-                ok(data.percentage >= 0, "what % is loaded: " + data.percentage)
-                ok(data.loaded >= 0, "how much data is loaded:" + data.loaded)
+                if(count++ == 1){
+                    start();
+                    equal(parseInt(data.duration), 24, "duration")
+                    equal(parseInt(data.time), 0, "time")
+                    ok(data.percentage >= 0, "what % is loaded: " + data.percentage)
+                    ok(data.loaded >= 0, "how much data is loaded:" + data.loaded)
+                }
             });
         })
 
@@ -462,8 +465,10 @@ $(document).ready(function() {
         test("creates an id for an element without one",
         function() {
             equal(0, ($(".id_less_player").attr("id")+"").length)
-            $(".id_less_player").superDumbPlayer('./assets/dumb_example.m4v')
-            ok($(".id_less_player").attr("id").length > 5, $(".id_less_player").attr("id"))
+            $(".id_less_player").superDumbPlayer('./assets/dumb_example.m4v');
+            ok($(".id_less_player").attr("id").length > 5, $(".id_less_player").attr("id"));
+            start();
+
         });
     })();
 
