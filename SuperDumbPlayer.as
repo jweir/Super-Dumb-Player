@@ -19,6 +19,7 @@ package {
   import flash.utils.Timer;
   import flash.events.TimerEvent;
   import flash.events.MouseEvent;
+  import flash.utils.setTimeout;
 
   // TODO alter the ContextMenu
   //import flash.ui.ContextMenu;
@@ -151,7 +152,13 @@ package {
       if((time+"").match(/%/)){
         time = parseFloat(time)/100 * metaDataStore.duration;
       }
-      stream.seek(time);
+      if(is_playing){
+        stream.pause();
+        stream.seek(time);
+        stream.resume();
+      } else {
+        stream.seek(time);
+      }
     }
 
     function publicMethods(){
@@ -207,7 +214,10 @@ package {
 
       switch (e.info.code) {
         case "NetStream.Seek.Notify":
-          externalUpdatePostion();
+          var self = this;
+          // Defer this call
+          // There is a bug in stream.time which does not get immediately updated
+          setTimeout(function(){ self.externalUpdatePostion()}, 10);
           break;
         case "NetStream.Play.StreamNotFound":
           trace("Stream not found.");
@@ -261,6 +271,7 @@ package {
 
     function externalUpdatePostion(){
       if(metaDataStore === undefined) return false;
+      trace(stream.time)
       ExternalInterface.call("dumb_player.event", player_id, 'sdpUpdate', {
         time      : stream.time,
         duration  : metaDataStore.duration,
