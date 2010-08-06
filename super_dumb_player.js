@@ -74,7 +74,7 @@
                 player().dumb_play(src);
                 return self
             },
-            remove: function() {
+            reset: function() {
                 $(player()).replaceWith(original_state);
             },
             toggle: function() {
@@ -102,7 +102,7 @@
                 return self;
             },
             toggle_volume: function() {
-                (player().dumb_volume() > 0) ? player().dumb_volume(0) : player().dumb_volume(0.8);
+                (player().dumb_volume() > 0) ? player().dumb_volume(0) : player().dumb_volume(1);
                 return self;
             }
         }
@@ -331,12 +331,12 @@
             scroll: false
         });
 
-        container.bind("sdpState." + id,
+        container.bind("sdpState(" + id + ")",
         function(e, s) {
             player_state = s;
         })
 
-        container.bind("sdpUpdate." + id,
+        container.bind("sdpUpdate(" + id + ")",
         function(event, info) {
             time.text(dumb_player.ui.time_formater()(info.time));
             duration.text(dumb_player.ui.time_formater()(info.duration));
