@@ -182,8 +182,7 @@
         "volume",
         "seek",
         "load",
-        "resize",
-        "flash_event",
+        "resize"
     ];
 
     var functions_without_args_map = [
@@ -192,7 +191,14 @@
         "toggle"
     ];
 
-    //buffer_time and info
+    jQuery.fn.flash_event = function(callback) {
+        return this.each(function() {
+            var player = get_player(this);
+            if (player) {
+                player.flash_event(callback);
+            }
+        });
+    }
 
     $.each(functions_with_args_map, function(i, func){
         jQuery.fn[func] = function() {
