@@ -183,8 +183,8 @@ package {
     }
 
     function volume(){
-      if(arguments[0] !== undefined) {
-        trace("volumne:" + arguments[0])
+      if(arguments[0] != null) {
+        trace("volume:" + arguments[0])
         stream.soundTransform = new SoundTransform(arguments[0]);
         externalUpdateVolume();
       }
@@ -193,7 +193,11 @@ package {
     }
 
     function bufferTime(){
-      if(arguments[0] !== undefined) stream.bufferTime = arguments[0];
+      if(arguments[0] != null) {
+        stream.bufferTime = arguments[0];
+        trace("setting bufferTime" + arguments[0]);
+        trace("bufferTime is " + stream.bufferTime);
+      }
       return stream.bufferTime;
     }
 
@@ -273,10 +277,10 @@ package {
       if(metaDataStore === undefined) return false;
       trace(stream.time)
       ExternalInterface.call("dumb_player.event", player_id, 'sdpUpdate', {
-        time      : stream.time,
-        duration  : metaDataStore.duration,
-        percentage: stream.time/metaDataStore.duration * 100,
-        loaded    : stream.bytesLoaded/stream.bytesTotal
+        time        : stream.time,
+        duration    : metaDataStore.duration,
+        percentage  : stream.time/metaDataStore.duration * 100,
+        loaded      : stream.bytesLoaded/stream.bytesTotal
       });
     }
   }

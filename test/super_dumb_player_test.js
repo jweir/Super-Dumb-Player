@@ -1,7 +1,7 @@
 $(document).ready(function() {
     dumb_player.player_url = "../super_dumb_player.swf";
 
-    var test_player;
+    test_player;
     var default_load_time = 10000;
 
     // Test helper: pause until the movie is started
@@ -91,6 +91,25 @@ $(document).ready(function() {
 
 
     })();
+
+    /////////////////////////////////////////////////////////////////////////////////
+    (function(){
+      module("HTML attributes", {
+          teardown: function(){
+            $("body").unbind();
+          }
+      });
+
+      test("the buffer_time is set via sdp_buffer_time", function(){
+        $("#test_player").attr("sdp_buffer_time", 17);
+        create_player();
+        after_movie_loads(function(){
+          start();
+          equal(17, test_player.buffer_time(), "buffer time is set");
+        });
+      });
+    })();
+
     /////////////////////////////////////////////////////////////////////////////////
     (function(){
         module("Functions", {
@@ -146,7 +165,9 @@ $(document).ready(function() {
         test("volume", function(){
             after_movie_loads(function(){
                 expect_event("sdpVolume(test_player)", 0.8);
-                test_player.volume(0.8);
+                expect(3);
+                equal(0.8, test_player.volume(0.8));
+                equal(0.8, test_player.volume(), "returns the current volume");
             });
         });
 
@@ -159,12 +180,26 @@ $(document).ready(function() {
         //});
 
         //test("reset", function(){ok(false)});
-        //test("buffer_time", function(){ok(false)});
+        test("buffer_time", function(){
+          after_movie_loads(function(){
+            expect(3);
+            start();
+            equal(1,  test_player.buffer_time(), "default buffer of 1");
+            equal(10, test_player.buffer_time(10), "update the buffer time");
+            equal(10, test_player.buffer_time(), "read the buffer time");
+          });
+        });
 
         test("toggle_volume", function(){
             after_movie_loads(function(){
-                expect_event("sdpVolume(test_player)", 1);
+                expect(2);
+                start();
+
+                test_player.volume(1);
                 test_player.toggle_volume();
+                equal(0, test_player.volume());
+                test_player.toggle_volume();
+                equal(1, test_player.volume());
             });
         });
 
@@ -202,7 +237,7 @@ $(document).ready(function() {
             });
         });
 
-        test("time, duration, percentage, loaded is available via the player.status property", function(){
+        test("time, duration, percentage, loaded are in player.status", function(){
             stop(default_load_time);
             expect(4);
             after_movie_loads(function(){
@@ -292,22 +327,23 @@ $(document).ready(function() {
 
         test("clicking the volume button toggles mute/umute",
         function() {
-            expect(3);
+            expect(4);
             stop(default_load_time);
 
             after_movie_loads(function() {
                 var button = $(".volume");
-                ok(button.find('.off').is(":visible"), "button is in initial state");
+                ok(button.find('.on').is(":visible"), "on state is visible");
+                ok(!button.find('.off').is(":visible"), "off state is hidden");
                 Syn
                 .click({},
                 button,
                 function() {
-                    ok(button.find('.on').is(":visible"), "button is in correct state");
+                    ok(button.find('.off').is(":visible"), "button is in correct state");
                 })
                 .click({},
                 button,
                 function() {
-                    ok(button.find('.off').is(":visible"), "final button state");
+                    ok(button.find('.on').is(":visible"), "final button state");
                     start();
                 })
             })
