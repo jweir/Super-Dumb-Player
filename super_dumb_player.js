@@ -6,6 +6,7 @@
     window.dumb_player = {
         player_url: "super_dumb_player.swf",
         create: create,
+        default_volume: 0.8,
         event: function(id, event_name, data) {
             $("#" + id).trigger(event_name, data);
             $("#" + id).trigger(event_name + "(" + id + ")", data);
@@ -14,7 +15,7 @@
 
     function loaded(player) {
         $(player.player()).css("visibility", "visible");
-        return player.load(player.src).volume();
+        return player.load(player.src).volume(dumb_player.default_volume);
     }
 
     function bind_events(container, player) {
