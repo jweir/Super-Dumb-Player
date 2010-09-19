@@ -17,23 +17,23 @@ $(document).ready(function() {
                 called = called + 1;
                 callback();
             }
-        })
-    }
+          })
+        }
 
-    function create_player() {
-        test_player = dumb_player.create("#test_player", './assets/dumb_example.m4v');
-    }
+        function create_player() {
+            test_player = dumb_player.create("#test_player", './assets/dumb_example.m4v');
+        }
 
-    function expect_event(event_name, expected_data, callback){
-        expect_event_with(
-            event_name,
-            function(data_value){ return data_value == expected_data },
-            callback)
-    }
+        function expect_event(event_name, expected_data, callback){
+            expect_event_with(
+                event_name,
+                function(data_value){ return data_value == expected_data },
+                callback)
+        }
 
-    function expect_event_with(event_name, eval_func, callback){
-        expect(1);
-        $("body").bind(event_name,
+        function expect_event_with(event_name, eval_func, callback){
+            expect(1);
+            $("body").bind(event_name,
         function(event, data) {
             if(eval_func(data)){
                 ok(true);

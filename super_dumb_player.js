@@ -4,12 +4,12 @@
 (function() {
 
     window.dumb_player = {
-        player_url: "super_dumb_player.swf",
-        create: create,
-        default_volume: 0.8,
-        event: function(id, event_name, data) {
-            $("#" + id).trigger(event_name, data);
-            $("#" + id).trigger(event_name + "(" + id + ")", data);
+        player_url     : "super_dumb_player.swf",
+        create         : create,
+        default_volume : 0.8,
+        event          : function(id, event_name, data) {
+          $("#" + id).trigger(event_name, data);
+          $("#" + id).trigger(event_name + "(" + id + ")", data);
         }
     };
 
@@ -22,34 +22,27 @@
         var id = container.attr("id");
 
         container
-        .bind("sdpPlay("+id+")", player.play)
-        .bind("sdpPause("+id+")", player.pause)
-        .bind("sdpSeek("+id+")",
-        function(e, d) {
-            player.seek(d)
-        })
-        .bind("sdpToggle("+id+")", player.toggle)
-        .bind("sdpUpdate("+id+")", function(e, d){
-            player.status = d;
-        })
+        .bind("sdpPlay("+id+")",         player.play)
+        .bind("sdpPause("+id+")",        player.pause)
+        .bind("sdpSeek("+id+")",         function(e, d){ player.seek(d);})
+        .bind("sdpToggle("+id+")",       player.toggle)
+        .bind("sdpUpdate("+id+")",       function(e, d){ player.status = d;})
         .bind("sdpToggleVolume("+id+")", player.toggle_volume)
-        .bind("sdpFlashLoaded("+id+")",
-        function() {
-            loaded(player);
-        })
+        .bind("sdpFlashLoaded("+id+")",  function(){ loaded(player);})
+    }
+
+    function ensure_element_has_id(container){
+        if(container.attr("id")+"" == ""){ container.attr("id", $.uniqueId()); }
     }
 
     function create(element, file_src) {
-        var container = $(element),
-            player = function() {
-                return container.find("object")[0];
-            },
+        var container      = $(element),
+            player         = function() { return container.find("object")[0]; },
             original_state = container.clone(true),
-            src = file_src;
+            src            = file_src;
 
-        if(element.id+"" == ""){
-            container.attr("id", $.uniqueId());
-        }
+        ensure_element_has_id(container);
+
         var self = {
             src: src,
             status : {},
@@ -168,14 +161,21 @@
     // jQuery extensions
     var data_key = "super_dumb_player";
 
-    function get_player(el) {
-        return $.data(el, "super_dumb_player");
-    }
+    function get_player(el) { return $.data(el, "super_dumb_player"); }
 
     jQuery.fn.superDumbPlayer = function(src) {
         return this.each(function() {
             var e = dumb_player.create(this, src);
             $.data(this, data_key, e);
+        });
+    }
+
+    jQuery.fn.flash_event = function(callback) {
+        return this.each(function() {
+            var player = get_player(this);
+            if (player) {
+                player.flash_event(callback);
+            }
         });
     }
 
@@ -191,15 +191,6 @@
         "pause",
         "toggle"
     ];
-
-    jQuery.fn.flash_event = function(callback) {
-        return this.each(function() {
-            var player = get_player(this);
-            if (player) {
-                player.flash_event(callback);
-            }
-        });
-    }
 
     $.each(functions_with_args_map, function(i, func){
         jQuery.fn[func] = function() {
@@ -223,11 +214,10 @@
         }
     });
 
-
     var counter = 0;
 
     jQuery.uniqueId = function() {
-        return ["spd", (new Date()).getTime(), (counter += 1)].join("-")
+        return ["sdp", (new Date()).getTime(), (counter += 1)].join("-")
     }
 
 })();
@@ -266,16 +256,6 @@
         return ui_template;
     }
 
-    var time_formater_func = function(str) {
-        return parseInt(str * 10) / 10
-    }
-
-    // Overwrite this function for formating the time
-    function time_formater(func) {
-        if (func !== undefined) time_formater_func = func;
-        return time_formater_func;
-    }
-
     function create(container) {
         var id = container.attr("id"),
             ui = $("<div class='super_dumb_player' id='dumb_player_" + id + "'></div>"),
@@ -304,6 +284,17 @@
             container.find(".volume ." + (is_on ? "on": "off")).show();
         });
     }
+
+    // Overwrite this function for formating the time
+    function time_formater(func) {
+        if (func !== undefined) time_formater_func = func;
+        return time_formater_func;
+    }
+
+    var time_formater_func = function(str) {
+        return parseInt(str * 10) / 10
+    }
+
 })();
 
  (function() {
@@ -312,14 +303,14 @@
     }
 
     function create(id, container) {
-        var time = container.find(".time"),
-        duration = container.find(".duration"),
-        buffer = container.find(".buffer"),
-        track = container.find(".track"),
-        thumb = container.find(".thumb"),
-        scrubber = container.find(".scrubber"),
-        player_state,
-        is_dragging;
+        var time     = container.find(".time"),
+            duration = container.find(".duration"),
+            buffer   = container.find(".buffer"),
+            track    = container.find(".track"),
+            thumb    = container.find(".thumb"),
+            scrubber = container.find(".scrubber"),
+            player_state,
+            is_dragging;
 
         thumb.draggable({
             start: function() {
