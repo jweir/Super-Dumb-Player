@@ -20,8 +20,9 @@ $(document).ready(function() {
           })
         }
 
-        function create_player() {
-            test_player = dumb_player.create("#test_player", './assets/dumb_example.m4v');
+        function create_player(src) {
+            src = src || "./assets/dumb_example.m4v";
+            test_player = dumb_player.create("#test_player", src);
         }
 
         function expect_event(event_name, expected_data, callback){
@@ -41,6 +42,43 @@ $(document).ready(function() {
             }
         });
     }
+
+    /////////////////////////////////////////////////////////////////////////////////
+    (function() {
+        module("Loading state", {
+          setup: function(){
+            container = $("#test_player");
+          },
+          teardown: function(){
+            $("body").unbind();
+        }});
+
+        test("before creating the player a .loading element is visible", function(){
+          $(".loading").is(":visible");
+        });
+
+        test("after creating the player a .loading element is visible and above the flash object", function(){
+            stop(2000);
+            $("body").bind("sdpUpdate(test_player)", function(){ ok(false, "movie loaded and should not have")});
+            create_player("no_source");
+            setTimeout(function(){
+                ok($(".loading").css("position") == "absolute", "is absolute");
+                ok($(".loading").is(":visibile"), "is visible");
+                ok($(".dumb_player_ui").length == 0, "ui has not been drawn yet");
+                $("body").unbind("sdpUpdate(test_player)");
+                start();
+            }, 1800);
+        });
+
+        test("after the player is loaded the .loaded element is hidden", function(){
+          create_player();
+          after_movie_loads(function(){
+            ok(!$(".loading").is(":visibile"), "is visible");
+            start();
+          });
+        });
+
+    })();
 
     /////////////////////////////////////////////////////////////////////////////////
     (function() {

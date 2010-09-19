@@ -231,6 +231,7 @@ package {
             trace("First time buffer full");
             first_time_buffer_full = true;
             stream.seek(0);
+            ExternalInterface.call("dumb_player.event", player_id, 'sdpVideoLoaded');
           }
           break;
         case "NetStream.Play.Start":

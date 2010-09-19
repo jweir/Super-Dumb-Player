@@ -13,9 +13,14 @@
         }
     };
 
-    function loaded(player) {
+    function flash_loaded(player) {
+        dumb_player.ui.create(player.container);
+        player.load(player.src);
+    }
+
+    function video_loaded(player) {
         $(player.player()).css("visibility", "visible");
-        return player.load(player.src).volume(dumb_player.default_volume);
+        return player.volume(dumb_player.default_volume);
     }
 
     function bind_events(container, player) {
@@ -28,7 +33,10 @@
         .bind("sdpToggle("+id+")",       player.toggle)
         .bind("sdpUpdate("+id+")",       function(e, d){ player.status = d;})
         .bind("sdpToggleVolume("+id+")", player.toggle_volume)
-        .bind("sdpFlashLoaded("+id+")",  function(){ loaded(player);})
+        // Called when the video file has been loaded and can play the first frame
+        .bind("sdpVideoLoaded("+id+")",  function(){ video_loaded(player);})
+        // Called with the Flash movie (not the video file) has been loaded
+        .bind("sdpFlashLoaded("+id+")",  function(){ flash_loaded(player);})
     }
 
     function ensure_element_has_id(container){
@@ -44,8 +52,9 @@
         ensure_element_has_id(container);
 
         var self = {
-            src: src,
-            status : {},
+            container : container,
+            src       : src,
+            status    : {},
             player: function() {
                 return player()
             },
@@ -104,7 +113,6 @@
         bind_events(container, self);
 
         dumb_player.flash.create(container);
-        dumb_player.ui.create(container);
 
         $(player()).css("visibility", "hidden");
         return self;
@@ -258,7 +266,6 @@
 
     function create(container) {
         var id = container.attr("id"),
-            ui = $("<div class='super_dumb_player' id='dumb_player_" + id + "'></div>"),
             player_state;
 
         container.append(ui_template.clone());
