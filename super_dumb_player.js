@@ -13,32 +13,6 @@
         }
     };
 
-    function flash_loaded(player) {
-        dumb_player.ui.create(player.container);
-        player.load(player.src);
-    }
-
-    function video_loaded(player) {
-        $(player.player()).css("visibility", "visible");
-        return player.volume(dumb_player.default_volume);
-    }
-
-    function bind_events(container, player) {
-        var id = container.attr("id");
-
-        container
-        .bind("sdpPlay("+id+")",         player.play)
-        .bind("sdpPause("+id+")",        player.pause)
-        .bind("sdpSeek("+id+")",         function(e, d){ player.seek(d);})
-        .bind("sdpToggle("+id+")",       player.toggle)
-        .bind("sdpUpdate("+id+")",       function(e, d){ player.status = d;})
-        .bind("sdpToggleVolume("+id+")", player.toggle_volume)
-        // Called when the video file has been loaded and can play the first frame
-        .bind("sdpVideoLoaded("+id+")",  function(){ video_loaded(player);})
-        // Called with the Flash movie (not the video file) has been loaded
-        .bind("sdpFlashLoaded("+id+")",  function(){ flash_loaded(player);})
-    }
-
     function ensure_element_has_id(container){
         if(container.attr("id")+"" == ""){ container.attr("id", $.uniqueId()); }
     }
@@ -71,7 +45,7 @@
                 return self
             },
             volume: function(value) {
-                return player().dumb_volume(value)
+                return player().dumb_volume(value);
             },
             load: function(src) {
                 player().dumb_play(src);
@@ -110,13 +84,45 @@
             }
         }
 
-        bind_events(container, self);
-
+        dumb_player.events.bind(container, self);
         dumb_player.flash.create(container);
-
         $(player()).css("visibility", "hidden");
         return self;
     }
+})();
+
+(function(){
+
+    window.dumb_player.events = {
+      bind : bind_events
+    };
+
+    function flash_loaded(player) {
+        dumb_player.ui.create(player.container);
+        player.load(player.src);
+    }
+
+    function video_loaded(player) {
+        $(player.player()).css("visibility", "visible");
+        return player.volume(dumb_player.default_volume);
+    }
+
+    function bind_events(container, player) {
+        var id = container.attr("id");
+
+        container
+        .bind("sdpPlay("+id+")",         player.play)
+        .bind("sdpPause("+id+")",        player.pause)
+        .bind("sdpSeek("+id+")",         function(e, d){ player.seek(d);})
+        .bind("sdpToggle("+id+")",       player.toggle)
+        .bind("sdpUpdate("+id+")",       function(e, d){ player.status = d;})
+        .bind("sdpToggleVolume("+id+")", player.toggle_volume)
+        // Called when the video file has been loaded and can play the first frame
+        .bind("sdpVideoLoaded("+id+")",  function(){ video_loaded(player);})
+        // Called with the Flash movie (not the video file) has been loaded
+        .bind("sdpFlashLoaded("+id+")",  function(){ flash_loaded(player);})
+    }
+
 })();
 
 (function(){
