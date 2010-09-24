@@ -167,15 +167,17 @@
 
     <div class="dumb_example">
       <div id='player'  style="width:270px; height:360px">
-        <b>Click the image for a dumb example</b>
-        <img src='assets/still_from_video.png'/>
+			<div class="poster">
+					<b>Click the image for a dumb example</b>
+					<img src='assets/still_from_video.png'/>
+				</div>
       </div>
 
       <script type="text/javascript">
         var player;
 
         $("#player img").click(function(){
-          $("#player").superDumbPlayer('assets/dumb_4example.m4v');
+          $("#player").superDumbPlayer('assets/dumb_example.m4v');
         })
       </script>
   	</div>

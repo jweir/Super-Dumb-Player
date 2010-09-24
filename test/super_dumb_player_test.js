@@ -6,65 +6,66 @@ $(document).ready(function() {
 
     // Test helper: pause until the movie is started
     function after_movie_loads(callback, times_to_call) {
-        stop(default_load_time);
+      stop(default_load_time);
 
-        var called = 0;
-        times_to_call = times_to_call || 1;
+      var called = 0;
+      times_to_call = times_to_call || 1;
 
-        $("body").bind("sdpUpdate(test_player)",
-        function(event, data) {
-            if (called < times_to_call) {
-                called = called + 1;
-                callback();
-            }
-          })
-        }
+      $("body").bind("sdpUpdate(test_player)",
+                     function(event, data) {
+                       if (called < times_to_call) {
+                         called = called + 1;
+                         callback();
+                       }
+                     })
+    }
 
-        function create_player(src) {
-            src = src || "./assets/dumb_example.m4v";
-            test_player = dumb_player.create("#test_player", src);
-        }
+    function create_player(src) {
+      src = src || "./assets/dumb_example.m4v";
+      test_player = dumb_player.create("#test_player", src);
+    }
 
-        function expect_event(event_name, expected_data, callback){
-            expect_event_with(
-                event_name,
-                function(data_value){ return data_value == expected_data },
-                callback)
-        }
+    function expect_event(event_name, expected_data, callback){
+      expect_event_with(
+        event_name,
+        function(data_value){ return data_value == expected_data },
+        callback)
+    }
 
-        function expect_event_with(event_name, eval_func, callback){
-            expect(1);
-            $("body").bind(event_name,
-        function(event, data) {
-            if(eval_func(data)){
-                ok(true);
-                (callback || start)();
-            }
-        });
+    function expect_event_with(event_name, eval_func, callback){
+      expect(1);
+      $("body").bind(event_name,
+                     function(event, data) {
+                       if(eval_func(data)){
+                         ok(true);
+                         (callback || start)();
+                       }
+                     });
     }
 
     /////////////////////////////////////////////////////////////////////////////////
     (function() {
-        module("Loading state", {
-          setup: function(){
-            container = $("#test_player");
-          },
-          teardown: function(){
-            $("body").unbind();
+      module("HTML states, if a poster element exists", {
+        setup: function(){
+          container = $("#test_player");
+          ok(container.find(".poster").length > 0, "poster exists");
+        },
+        teardown: function(){
+          $("body").unbind();
         }});
 
-        test("before creating the player a .loading element is visible", function(){
-          $(".loading").is(":visible");
+        test("before creating the player a .poster element is visible", function(){
+          $(".poster").is(":visible");
         });
 
-        test("after creating the player a .loading element is visible and above the flash object", function(){
+        test("after creating the player a .poster element is visible and above the flash object", function(){
             stop(2000);
             $("body").bind("sdpUpdate(test_player)", function(){ ok(false, "movie loaded and should not have")});
             create_player("no_source");
             setTimeout(function(){
-                ok($(".loading").css("position") == "absolute", "is absolute");
-                ok($(".loading").is(":visibile"), "is visible");
-                ok($(".dumb_player_ui").length == 0, "ui has not been drawn yet");
+                ok($(".poster").css("position") == "absolute", "is absolute");
+                ok($(".poster").is(":visible"), "is visible");
+                //ok($(".dumb_player_ui").is(":visible"), "ui has not been drawn yet");
                 $("body").unbind("sdpUpdate(test_player)");
                 start();
             }, 1800);
@@ -73,7 +74,7 @@ $(document).ready(function() {
         test("after the player is loaded the .loaded element is hidden", function(){
           create_player();
           after_movie_loads(function(){
-            ok(!$(".loading").is(":visibile"), "is visible");
+            ok(!$(".poster").is(":visible"), "is visible");
             start();
           });
         });
@@ -95,7 +96,7 @@ $(document).ready(function() {
             }
         });
 
-        test("injects flash into the container HTML", function() {
+        test("appends flash into the container HTML", function() {
             ok(container.find("object")[0])
         });
 
@@ -107,8 +108,11 @@ $(document).ready(function() {
             })
         });
 
-        test("injects the UI into the container HTML", function(){
-            ok(container.find(".dumb_player_ui")[0])
+        test("appends the UI into the container HTML", function(){
+            after_movie_loads(function(){
+              ok(container.find(".dumb_player_ui")[0], "UI exists");
+              start();
+            });
         });
 
         test("player() returns the flash object", function(){
@@ -195,7 +199,7 @@ $(document).ready(function() {
         test("seek set the movie time", function(){
             after_movie_loads(function(){
                 expect_event_with("sdpUpdate(test_player)",
-                    function(d){ return d.time == 10});
+                    function(d){  if(d.time == 10){ start(); return true}});
                 test_player.pause().seek(10);
             });
         });
@@ -447,37 +451,37 @@ $(document).ready(function() {
         test("dragging the the scrubber seeks the movie",
         function() {
             expect(2);
-            stop(default_load_time);
-
-            var thumb = $(".thumb"),
-                time_before_drag,
-                time_after_drag;
-
-            var test_drag = function() {
-                ok(time_before_drag >= 0)
-
-                time_after_drag = test_player.status.time;
-                ok(time_after_drag > time_before_drag, "time is updated : " + time_before_drag + " " + time_after_drag);
-                start();
-            }
+            stop(default_load_time * 600);
 
             after_movie_loads(function() {
-                test_player.pause();
-                Syn
-                .click($(".state"))
-                .delay(500, function(){time_before_drag = test_player.status.time;}) // let the movie load a bit
-                .click($(".state"))
-                .drag({
-                    from: {
-                        clientX: thumb.offset().left,
-                        clientY: thumb.offset().top
-                    },
-                    to: {
-                        clientX: thumb.offset().left + 250,
-                        clientY: thumb.offset().top
-                    },
-                    duration: 500
-                }, $(".thumb"), test_drag)
+              var thumb = $(".thumb"),
+                  time_before_drag,
+                  time_after_drag;
+
+              var test_drag = function() {
+                  ok(time_before_drag >= 0)
+
+                  time_after_drag = test_player.status.time;
+                  ok(time_after_drag > time_before_drag, "time is updated : " + time_before_drag + " " + time_after_drag);
+                  start();
+              }
+
+              test_player.pause();
+              Syn
+              .click($(".state"))
+              .delay(500, function(){window.console.log("ok"); time_before_drag = test_player.status.time;}) // let the movie load a bit
+              .click($(".state"))
+              .drag({
+                from: {
+                  clientX: thumb.offset().left,
+                  clientY: thumb.offset().top
+                },
+                to: {
+                  clientX: thumb.offset().left + 250,
+                  clientY: thumb.offset().top
+                },
+                duration: 500
+              }, $(".thumb"), test_drag)
             })
         })
     })();
@@ -485,11 +489,11 @@ $(document).ready(function() {
     /////////////////////////////////////////////////////////////////////////////////
     (function(){
 
-        module("jQuery plugin", {
-            setup: function() {
-                $("#test_player").superDumbPlayer('./assets/dumb_example.m4v');
-            },
-            teardown: function() {
+      module("jQuery plugin", {
+        setup: function() {
+          $("#test_player").superDumbPlayer('./assets/dumb_example.m4v');
+        },
+        teardown: function() {
                 $("body").unbind();
             }
         });
