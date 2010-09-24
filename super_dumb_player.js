@@ -97,12 +97,14 @@
 
   function flash_loaded(player) {
     dumb_player.ui.create(player.container);
+    player.container.find(".controls").hide();
     player.container.find(".poster").css("position", "absolute");
     player.load(player.src);
   }
 
   function video_loaded(player) {
-    player.container.find(".poster").hide();
+    player.container.find(".poster, .loading").hide();
+    player.container.find(".controls").show();
     $(player.player()).css("visibility", "visible");
     return player.volume(dumb_player.default_volume);
   }
@@ -243,25 +245,30 @@
   };
 
   var ui_template = $("\
-                      <div class='dumb_player_ui'>\
-                        <div class='scrubber'>\
-                          <div class='track'>\
-                            <div class='buffer'>\
-                              <div class='thumb'/>\
-                                </div>\
-                                  </div>\
-                                    </div>\
-                                      <button class='state'>\
-                                        <span class='play'>Pause</span>\
-                                          <span class='pause'>Play</span>\
-                                            </button>\
-                                              <button class='volume'>\
-                                                <span class='on'>Mute</span>\
-                                                  <span class='off'>Unmute</span>\
-                                                    </button>\
-                                                      <span class='time'/>\
-                                                        <span class='duration'/>\
-                                                          </div>");
+    <div class='dumb_player_ui'>\
+      <div class='loading'>\
+        Loading video...\
+      </div>\
+      <div class='controls'>\
+        <div class='scrubber'>\
+          <div class='track'>\
+            <div class='buffer'>\
+              <div class='thumb'/>\
+            </div>\
+          </div>\
+        </div>\
+        <button class='state'>\
+          <span class='play'>Pause      </span>\
+          <span class='pause'>Play      </span>\
+        </button>\
+        <button class='volume'>\
+          <span class='on'>Mute         </span>\
+          <span class='off'>Unmute      </span>\
+        </button>\
+        <span class='time'/>\
+        <span class='duration'/>\
+      </div>\
+    </div>");
 
   function template(obj_or_html) {
     if (obj_or_html !== undefined) ui_template = $(obj_or_html);
